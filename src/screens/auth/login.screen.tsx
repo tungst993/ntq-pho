@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect } from 'react';
-import { View, StyleSheet, Platform, Image } from 'react-native';
+import { View, StyleSheet, Platform, Image, Button } from 'react-native';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Typography from '../../theme/Typography';
@@ -89,7 +89,7 @@ const LoginScreen = memo<Props>(() => {
   const signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
-      // const userInfo = await GoogleSignin.getCurrentUser();
+      await GoogleSignin.signIn();
       const token = await GoogleSignin.getTokens();
 
       loginWithSns({
@@ -120,10 +120,11 @@ const LoginScreen = memo<Props>(() => {
     content = (
       <Background>
         <Image source={Images.ntqLogo} />
-        <GoogleSigninButton
-          style={{ width: responsiveWidth(55), height: 48, marginTop: 40 }}
-          size={GoogleSigninButton.Size.Wide}
-          color={GoogleSigninButton.Color.Dark}
+        <Button
+          // style={{ width: responsiveWidth(55), height: 48, marginTop: 40 }}
+          // size={GoogleSigninButton.Size.Wide}
+          // color={GoogleSigninButton.Color.Dark}
+          title="GG"
           onPress={signIn}
         />
       </Background>
