@@ -120,11 +120,11 @@ const LoginScreen = memo<Props>(() => {
     content = (
       <Background>
         <Image source={Images.ntqLogo} />
-        <Button
-          // style={{ width: responsiveWidth(55), height: 48, marginTop: 40 }}
-          // size={GoogleSigninButton.Size.Wide}
-          // color={GoogleSigninButton.Color.Dark}
-          title="GG"
+        <GoogleSigninButton
+          style={{ width: responsiveWidth(55), height: 48, marginTop: 40 }}
+          size={GoogleSigninButton.Size.Wide}
+          color={GoogleSigninButton.Color.Dark}
+          // title="GG"
           onPress={signIn}
         />
       </Background>

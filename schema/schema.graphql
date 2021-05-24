@@ -51,6 +51,7 @@ enum UserDepartmentEnum {
   BOM
   RECO
   EZD
+  TWOB
 }
 
 enum UserPositionEnum {

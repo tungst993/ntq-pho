@@ -64,6 +64,7 @@ export enum UserDepartmentEnum {
   BOM = 'BOM',
   RECO = 'RECO',
   EZD = 'EZD',
+  TWOB = 'TWOB',
 }
 
 export enum UserPositionEnum {
