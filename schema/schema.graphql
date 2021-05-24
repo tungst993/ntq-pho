@@ -1,0 +1,385 @@
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  hasPrevPage: Boolean!
+  hasNextPage: Boolean!
+}
+
+type BasePaginationMeta {
+  itemCount: Float!
+  totalItems: Float!
+  itemsPerPage: Float!
+  totalPages: Float!
+  currentPage: Float!
+}
+
+type User implements Node {
+  id: Float!
+  firstName: String!
+  lastName: String!
+  fullName: String!
+  nickname: String!
+  intro: String
+  googleId: String!
+  avatar: String
+  isNew: Boolean!
+  lastSeen: DateTime
+  department: UserDepartmentEnum
+  position: UserPositionEnum
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+Node
+"""
+interface Node {
+  id: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum UserDepartmentEnum {
+  OS8
+  OS1
+  OS3
+  OS10
+  IC
+  BOM
+  RECO
+  EZD
+}
+
+enum UserPositionEnum {
+  DEV
+  COMTOR
+  CEO
+  BA
+  PM
+  TEAM_LEAD
+  DM
+}
+
+type UserConnection {
+  items: [User!]
+  meta: BasePaginationMeta!
+}
+
+type Media implements Node {
+  id: Float!
+  fileSize: Int
+  name: String!
+  filePath: String
+  mimeType: String
+  isDeleted: Boolean!
+  type: FileType!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum FileType {
+  FILE
+  DIR
+}
+
+type MediaConnection {
+  items: [Media!]
+  meta: BasePaginationMeta!
+}
+
+"""
+AuthConnection
+"""
+type AuthConnection {
+  accessToken: String
+  refreshToken: String
+  user: User!
+}
+
+type Post implements Node {
+  id: Float!
+  creatorId: Float!
+  medias: [Float!]
+  caption: String
+  rawCaption: String
+  actualLike: Float!
+  isPublic: Boolean!
+  score: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  totalLike: Float!
+  isLike: Boolean!
+  mediasPath: [Media!]
+  creatorInfo: User
+}
+
+type PostConnection {
+  items: [Post!]
+  meta: BasePaginationMeta!
+}
+
+type PostEdge {
+  cursor: String!
+  node: Post!
+}
+
+type PostCursorConnection {
+  edges: [PostEdge!]
+  nodes: [Post!]
+  totalCount: Int!
+  pageInfo: PageInfo!
+}
+
+type Comments implements Node {
+  id: Float!
+  creatorId: Float!
+  postId: Float!
+  parentId: Float!
+  content: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  creatorInfo: User!
+}
+
+type CommentDeletePayload {
+  id: Float!
+  postId: Float!
+}
+
+type CommentConnection {
+  items: [Comments!]
+  meta: BasePaginationMeta!
+}
+
+type Like implements Node {
+  id: Float!
+  postId: Float!
+  userId: Float!
+  createdAt: DateTime!
+  creatorInfo: User!
+  postInfo: Post!
+}
+
+type Report implements Node {
+  id: Float!
+  postId: Float!
+  userId: Float!
+  createdAt: DateTime!
+  postInfo: Post
+}
+
+type ReportPostConnection {
+  items: [Report!]
+  meta: BasePaginationMeta!
+}
+
+type Notification implements Node {
+  id: Float!
+  triggerId: Float!
+  userId: Float!
+  content: String!
+  link: String!
+  type: EvenEnum!
+  resourceId: String!
+  isSeen: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  triggerInfo: User!
+}
+
+enum EvenEnum {
+  like
+  follow
+  acceptFollow
+  comment
+  tag
+}
+
+type NotificationConnection {
+  items: [Notification!]
+  meta: BasePaginationMeta!
+}
+
+type Chat implements Node {
+  id: Float!
+  participants: [Float!]!
+  isTemp: Boolean!
+  lastMessage: Float
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  participantInfo: [User!]!
+  lastMessageData: Message
+  unseenMessage: Float!
+}
+
+type ChatConnection {
+  items: [Chat!]
+  meta: BasePaginationMeta!
+}
+
+type Message implements Node {
+  id: Float!
+  sender: Float!
+  chatId: Float!
+  content: String
+  media: String
+  mediaType: MediaType
+  sent: Boolean!
+  tempId: String!
+  received: Boolean!
+  createdAt: DateTime!
+  senderInfo: User!
+}
+
+enum MediaType {
+  VIDEO
+  IMAGE
+}
+
+type MessageConnection {
+  items: [Message!]
+  meta: BasePaginationMeta!
+}
+
+type SeenMessage {
+  chatId: Float!
+  userId: Float!
+}
+
+type ReceivedMessage {
+  chatId: Float!
+  userId: Float!
+  message: Message!
+}
+
+type Query {
+  me: User!
+  getUserInfo(id: Float!): User
+  searchUser(page: Float!, limit: Float!, keyword: String!): UserConnection!
+  medias(limit: Int = 15, page: Int = 1, parentId: String): MediaConnection
+  media(id: Float!): Media
+  getNotification(page: Float!, limit: Float!): NotificationConnection!
+  countUnSeenNotification: Float!
+  getUserLikePost(postId: Float!): [User!]!
+  getPostComment(page: Float!, limit: Float!, postId: Float!): CommentConnection!
+  test(
+    first: Int = 10
+    after: String
+
+    """
+    Pass input type of search value
+    """
+    type: String!
+    validateCursor: Boolean = false
+
+    """
+    Pass the key value to search and sort data
+    """
+    cursorKey: String!
+  ): PostCursorConnection!
+  getPostDetail(id: Float!): Post!
+  myPost(page: Float!, limit: Float!): PostConnection!
+  getUserPost(page: Float!, limit: Float!, userId: Float!): PostConnection!
+  getReportedPost(page: Float!, limit: Float!): ReportPostConnection!
+  getChats(page: Float!, limit: Float!): ChatConnection!
+  getExistChat(participants: [Float!]!): Chat
+  getChatHasUnseenMessage: [Float!]!
+  getMessage(page: Float!, limit: Float!, chatId: Float!): MessageConnection!
+}
+
+type Mutation {
+  updateUserInfo(input: UpdateUserInput!): User!
+  test: User!
+  uploadMedia(provider: String = "LOCAL", parentId: ID, file: Upload!): Media!
+  uploadMediaToS3(parentId: ID, file: Upload!): Media!
+  removeMedia(id: ID): Media!
+  updateMedia(input: UpdateMediaInput!): Media!
+  createDir(parentId: ID, dirName: String!): Media!
+  loginWithSNS(input: LoginSNSInput!): AuthConnection!
+  logout: Boolean!
+  setSeenNotification: Boolean!
+  createComment(input: CreateCommentInput!): Comments!
+  updateComment(input: UpdateCommentInput!): Comments!
+  removeComment(postId: Float!, id: Float!): Boolean!
+  createPost(input: CreatePostInput!): Post!
+  updatePost(input: UpdatePostInput!): Post!
+  removePost(id: Float!): Boolean!
+  reactToPost(postId: Float!): Boolean!
+  reportPost(postId: Float!): Boolean!
+  removeReportedPost(id: Float!): Boolean!
+  createChat(participants: [Float!]!): Chat!
+  deleteChat(id: Float!): Float!
+  sendMessage(input: NewMessageInput!): Message!
+  setSeenMessage(chatId: Float!): Boolean!
+}
+
+input UpdateUserInput {
+  avatar: String
+  intro: String
+  department: UserDepartmentEnum
+  position: UserPositionEnum
+}
+
+"""
+The `Upload` scalar type represents a file upload.
+"""
+scalar Upload
+
+input UpdateMediaInput {
+  id: ID!
+  name: String!
+}
+
+input LoginSNSInput {
+  token: String!
+}
+
+input CreateCommentInput {
+  content: String!
+  parentId: Float = 0
+  postId: Float!
+}
+
+input UpdateCommentInput {
+  content: String!
+  parentId: Float = 0
+  postId: Float!
+  id: Float!
+}
+
+input CreatePostInput {
+  medias: [Float!] = []
+  caption: String = ""
+  rawCaption: String = ""
+  isPublic: Boolean = true
+}
+
+input UpdatePostInput {
+  medias: [Float!] = []
+  caption: String = ""
+  rawCaption: String = ""
+  isPublic: Boolean = true
+  id: Float!
+}
+
+input NewMessageInput {
+  content: String
+  chatId: Float!
+  media: String
+  mediaType: MediaType
+  tempId: String!
+}
+
+type Subscription {
+  onNewNotification(userId: Float!): Notification!
+  onLikePost(postId: Float!): Like!
+  onUnLikePost(postId: Float!): Like!
+  onCreateComment(postId: Float!): Comments!
+  onDeleteComment(postId: Float!): CommentDeletePayload!
+  onNewMessage(chatId: Float!): Message!
+  onSeenMessage(chatId: Float!): SeenMessage!
+  onReceiveMessage(userId: Float!): ReceivedMessage!
+}

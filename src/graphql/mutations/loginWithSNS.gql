@@ -1,0 +1,22 @@
+mutation loginWithSNS($input: LoginSNSInput!) {
+  loginWithSNS(input: $input) {
+    accessToken
+    refreshToken
+    user {
+      id
+      firstName
+      lastName
+      fullName
+      nickname
+      intro
+      googleId
+      avatar
+      isNew
+      lastSeen
+      department
+      position
+      createdAt
+      updatedAt
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "possibleTypes": {
+    "Node": ["User", "Media", "Post", "Comments", "Like", "Report", "Notification", "Chat", "Message"]
+  }
+}
