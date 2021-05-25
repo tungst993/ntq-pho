@@ -26,4 +26,6 @@ export enum AppRoutes {
   LIVE_STREAM_VIEW_SCREEN = 'LiveStreamViewScreen',
   UPDATE_DEPARTMENT_INFO = 'UpdateDepartmentInfo',
   UPDATE_POSITION_INFO = 'UpdatePositionInfo',
+  WELCOME_SCREEN = 'WelcomeScreen',
+  SEARCH_SCREEN = 'SearchScreen',
 }

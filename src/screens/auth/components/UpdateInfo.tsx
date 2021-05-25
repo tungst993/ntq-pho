@@ -9,9 +9,56 @@ import Background from '../../../components/Background';
 interface UpdateInfoProps {
   list: Array<string>;
   onComplete: (value: string) => void;
+  title: string;
+  type?: string;
 }
 
-const UpdateInfo = React.memo<UpdateInfoProps>(({ list, onComplete }) => {
+const UpdateInfo = React.memo<UpdateInfoProps>(({ list, onComplete, title, type }) => {
+  const styles = StyleSheet.create({
+    logo: {
+      width: 90,
+      height: 90,
+    },
+    logoWrapper: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      paddingVertical: 30,
+    },
+    itemWrapper: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      paddingHorizontal: (responsiveWidth(20) - 40) / 2,
+      width: responsiveWidth(100),
+    },
+    itemView: {
+      width: type === 'position' ? responsiveWidth(25) : responsiveWidth(20),
+      alignItems: 'center',
+      height: responsiveWidth(10),
+      borderColor: ThemeStatic.accent,
+      borderWidth: 1,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginHorizontal: 5,
+      marginBottom: 30,
+      borderRadius: responsiveWidth(10),
+    },
+    title: {
+      color: ThemeStatic.white,
+      fontSize: 30,
+      paddingHorizontal: (responsiveWidth(20) - 40) / 2,
+      textAlign: 'center',
+      lineHeight: 50,
+    },
+    buttonConfirm: {
+      height: 48,
+      backgroundColor: ThemeStatic.white,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 5,
+      width: responsiveWidth(90),
+    },
+  });
+
   const [itemSelected, setItemSeleted] = useState<any>('');
 
   function onSelectedDepartment(itemSelected: string) {
@@ -24,7 +71,7 @@ const UpdateInfo = React.memo<UpdateInfoProps>(({ list, onComplete }) => {
         <Image source={Images.ntqLogo} />
       </View>
       <View>
-        <Text style={styles.title}>Chọn đơn vị bạn đang làm việc?</Text>
+        <Text style={styles.title}>{title}</Text>
       </View>
       <View style={styles.itemWrapper}>
         {list.map((item, index) => (
@@ -36,8 +83,8 @@ const UpdateInfo = React.memo<UpdateInfoProps>(({ list, onComplete }) => {
               <Text
                 style={
                   item === itemSelected
-                    ? { color: 'white', fontWeight: 'bold' }
-                    : { color: ThemeStatic.accent, fontWeight: 'bold' }
+                    ? { color: 'white', fontWeight: 'bold', fontSize: 13 }
+                    : { color: ThemeStatic.accent, fontWeight: 'bold', fontSize: 13 }
                 }>
                 {item}
               </Text>
@@ -50,52 +97,6 @@ const UpdateInfo = React.memo<UpdateInfoProps>(({ list, onComplete }) => {
       </TouchableOpacity>
     </Background>
   );
-});
-
-const styles = StyleSheet.create({
-  logo: {
-    width: 90,
-    height: 90,
-  },
-  logoWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingVertical: 30,
-  },
-  itemWrapper: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingHorizontal: (responsiveWidth(20) - 40) / 2,
-    width: responsiveWidth(100),
-    // paddingBottom: responsiveHeight(5),
-  },
-  itemView: {
-    width: responsiveWidth(20),
-    alignItems: 'center',
-    height: responsiveWidth(10),
-    borderColor: ThemeStatic.accent,
-    borderWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginHorizontal: 5,
-    marginBottom: 30,
-    borderRadius: responsiveWidth(10),
-  },
-  title: {
-    color: ThemeStatic.white,
-    fontSize: 30,
-    paddingHorizontal: (responsiveWidth(20) - 40) / 2,
-    textAlign: 'center',
-    lineHeight: 50,
-  },
-  buttonConfirm: {
-    height: 48,
-    backgroundColor: ThemeStatic.white,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
-    width: responsiveWidth(90),
-  },
 });
 
 export default UpdateInfo;

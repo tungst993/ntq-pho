@@ -12,4 +12,5 @@ export const Images = {
   logo: require('./logo.png'),
   ntqLogo: require('./ntq-logo.png'),
   ntqLogoBlue: require('./ntq-logo-blue.png'),
+  welcome: require('./welcome.png'),
 };

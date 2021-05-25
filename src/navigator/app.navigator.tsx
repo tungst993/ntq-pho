@@ -14,6 +14,7 @@ export type MainTabParamList = {
   [AppRoutes.HOME_TAB]: undefined;
   [AppRoutes.NOTIFICATION_TAB]: undefined;
   [AppRoutes.PROFILE_TAB]: undefined;
+  [AppRoutes.SEARCH_SCREEN]: undefined;
 };
 
 export type AppStackParamList = {
@@ -29,6 +30,7 @@ export const MainNavigator = () => (
     <Tab.Screen name={AppRoutes.HOME_TAB} component={HomeNavigator} />
     <Tab.Screen name={AppRoutes.NOTIFICATION_TAB} component={HomeNavigator} />
     <Tab.Screen name={AppRoutes.PROFILE_TAB} component={ProfileNavigator} />
+    <Tab.Screen name={AppRoutes.SEARCH_SCREEN} component={HomeNavigator} />
   </Tab.Navigator>
 );
 

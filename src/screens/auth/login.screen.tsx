@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect } from 'react';
-import { View, StyleSheet, Platform, Image, Button } from 'react-native';
+import { View, StyleSheet, Platform, Image } from 'react-native';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Typography from '../../theme/Typography';
@@ -8,7 +8,6 @@ import type { AuthLoginScreenProp } from '../../navigator/auth.navigator';
 import type { ThemeColors } from '../../types/theme';
 import ZaloKit from 'react-native-zalo-kit';
 import { themeState } from '../../recoil/theme/atoms';
-import LottieView from 'lottie-react-native';
 import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-google-signin/google-signin';
 import { isLoginState } from '../../recoil/auth/atoms';
 import { useLoginWithSnsMutation } from '../../graphql/mutations/loginWithSNS.generated';
@@ -91,6 +90,7 @@ const LoginScreen = memo<Props>(() => {
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.signIn();
       const token = await GoogleSignin.getTokens();
+      console.log('token', token);
 
       loginWithSns({
         variables: {
@@ -114,7 +114,7 @@ const LoginScreen = memo<Props>(() => {
     }
   };
 
-  let content = <LottieView source={require('../../assets1/loading.json')} autoPlay loop />;
+  let content = <View />;
 
   if (!initializing) {
     content = (

@@ -11,7 +11,6 @@ import { themeState, themeTypeState } from './recoil/theme/atoms';
 import { useMeLazyQuery } from './graphql/queries/me.generated';
 import { isLoginState } from './recoil/auth/atoms';
 
-import LottieView from 'lottie-react-native';
 import Toast from 'react-native-toast-message';
 import FastImage from 'react-native-fast-image';
 
@@ -67,9 +66,8 @@ const App = React.memo(() => {
           backgroundColor: theme.base,
           justifyContent: 'center',
           alignItems: 'center',
-        }}>
-        <LottieView source={require('./assets1/loading.json')} autoPlay loop />
-      </View>
+        }}
+      />
     );
   }
 

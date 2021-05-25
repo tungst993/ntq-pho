@@ -7,12 +7,16 @@ import { AppRoutes } from './app-routes';
 
 import { useRecoilValue } from 'recoil';
 import { isLoginState } from '../recoil/auth/atoms';
-import UpdateInfo from '../screens/auth/register.screen';
+import UpdateDepartmentInfo from '../screens/auth/updateDepartmentInfo';
+import UpdatePositInfo from '../screens/auth/updatePositionInfo';
+import WelcomeScreen from '../screens/auth/welcome.screen';
 
 export type RootStackParamList = {
   [AppRoutes.AUTH]: undefined;
   [AppRoutes.APP]: undefined;
   [AppRoutes.UPDATE_DEPARTMENT_INFO]: undefined;
+  [AppRoutes.UPDATE_POSITION_INFO]: undefined;
+  [AppRoutes.WELCOME_SCREEN]: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -32,8 +36,14 @@ export const RootNavigator = (props: Partial<RootStackNavigatorProps>): React.Re
           <Stack.Screen
             options={{ headerShown: false }}
             name={AppRoutes.UPDATE_DEPARTMENT_INFO}
-            component={UpdateInfo}
+            component={UpdateDepartmentInfo}
           />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name={AppRoutes.UPDATE_POSITION_INFO}
+            component={UpdatePositInfo}
+          />
+          <Stack.Screen options={{ headerShown: false }} name={AppRoutes.WELCOME_SCREEN} component={WelcomeScreen} />
         </>
       )}
     </Stack.Navigator>
