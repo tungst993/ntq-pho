@@ -22,7 +22,7 @@ const TabIcon = ({ route, isActive }: any) => {
     case AppRoutes.HOME_TAB:
       return <Entypo name="home" color={isActive ? theme.accent : theme.text02} size={IconSizes.x5} />;
 
-    case AppRoutes.EXPLORE_TAB:
+    case AppRoutes.SEARCH_SCREEN:
       return <AntDesign name="search1" color={isActive ? theme.accent : theme.text02} size={IconSizes.x5} />;
 
     case AppRoutes.UPLOAD_TAB:

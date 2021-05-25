@@ -7,9 +7,11 @@ import type { RootStackParamList } from './root.navigator';
 import type { MainTabParamList } from './app.navigator';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/home/home.screen';
+import CreatePostScreen from '../screens/createPost';
 
 export type HomeStackParamList = {
   [AppRoutes.HOME]: undefined;
+  [AppRoutes.CREATE_POST]: undefined;
 };
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
@@ -36,5 +38,6 @@ export const HomeNavigator = () => (
       headerShown: false,
     }}>
     <Stack.Screen name={AppRoutes.HOME} component={HomeScreen} />
+    <Stack.Screen name={AppRoutes.CREATE_POST} component={CreatePostScreen} />
   </Stack.Navigator>
 );

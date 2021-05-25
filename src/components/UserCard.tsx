@@ -56,8 +56,8 @@ const UserCard: React.FC<UserCardProps> = ({
           <View style={[styles().onlineDot, { backgroundColor: onlineDotColor }]} />
         </View>
       ) : (
-          <NativeImage uri={isBlock ? '' : avatar} style={styles(theme).avatarImage} />
-        )}
+        <NativeImage uri={isBlock ? '' : avatar} style={styles(theme).avatarImage} />
+      )}
       <View style={styles().info}>
         <Text style={styles(theme).handleText}>{isBlock ? 'Anonymous' : name} </Text>
         <Text numberOfLines={1} ellipsizeMode="tail" style={styles(theme).nameText}>

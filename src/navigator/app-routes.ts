@@ -28,4 +28,5 @@ export enum AppRoutes {
   UPDATE_POSITION_INFO = 'UpdatePositionInfo',
   WELCOME_SCREEN = 'WelcomeScreen',
   SEARCH_SCREEN = 'SearchScreen',
+  CREATE_POST = 'CreatePost',
 }

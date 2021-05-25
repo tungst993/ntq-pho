@@ -34,13 +34,11 @@ const LoginScreen = memo<Props>(() => {
 
   const [loginWithSns] = useLoginWithSnsMutation({
     onCompleted: (res) => {
-      console.log('res', res);
-      navigate(AppRoutes.UPDATE_DEPARTMENT_INFO);
-      // if (res.loginWithSNS.user.isNew) {
-      //   navigate(AppRoutes.UPDATE_DEPARTMENT_INFO);
-      // } else {
-      //   setIsLogin(true);
-      // }
+      if (res.loginWithSNS.user.isNew) {
+        navigate(AppRoutes.UPDATE_DEPARTMENT_INFO);
+      } else {
+        setIsLogin(true);
+      }
     },
     onError: (err) => {
       console.log('loginWithSns', err);

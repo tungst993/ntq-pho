@@ -9,6 +9,12 @@ import type { ThemeColors } from '../../types/theme';
 const TabBarComponent = ({ navigation, descriptors, state, ...data }: any) => {
   const theme = useRecoilValue(themeState);
 
+  const focusedOptions = descriptors[state.routes[state.index].key].options;
+
+  if (focusedOptions.tabBarVisible === false) {
+    return null;
+  }
+
   return (
     <View style={styles(theme).container}>
       {state &&

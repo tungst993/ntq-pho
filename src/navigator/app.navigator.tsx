@@ -9,6 +9,7 @@ import TabBarComponent from './TarBarComponent';
 import { useRecoilState } from 'recoil';
 import { notificationNavigateState } from '../recoil/app/atoms';
 import { useNavigation } from '@react-navigation/core';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 export type MainTabParamList = {
   [AppRoutes.HOME_TAB]: undefined;
@@ -25,14 +26,59 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
 
 const Stack = createStackNavigator<AppStackParamList>();
 
-export const MainNavigator = () => (
-  <Tab.Navigator lazy={true} tabBarOptions={{ showLabel: false }} tabBar={(props) => <TabBarComponent {...props} />}>
-    <Tab.Screen name={AppRoutes.HOME_TAB} component={HomeNavigator} />
-    <Tab.Screen name={AppRoutes.NOTIFICATION_TAB} component={HomeNavigator} />
-    <Tab.Screen name={AppRoutes.PROFILE_TAB} component={ProfileNavigator} />
-    <Tab.Screen name={AppRoutes.SEARCH_SCREEN} component={HomeNavigator} />
-  </Tab.Navigator>
-);
+export const MainNavigator = () => {
+  const getTabBarVisibility = (route: any) => {
+    console.log(route);
+
+    const routeName = getFocusedRouteNameFromRoute(route) || '';
+    console.log('2', routeName);
+
+    const allowRoute: string[] = [
+      '',
+      AppRoutes.HOME,
+      AppRoutes.NOTIFICATION_TAB,
+      AppRoutes.PROFILE_TAB,
+      AppRoutes.SEARCH_SCREEN,
+    ];
+    if (!allowRoute.includes(routeName)) {
+      return false;
+    }
+    return true;
+  };
+
+  return (
+    <Tab.Navigator lazy={true} tabBarOptions={{ showLabel: false }} tabBar={(props) => <TabBarComponent {...props} />}>
+      <Tab.Screen
+        name={AppRoutes.HOME_TAB}
+        component={HomeNavigator}
+        options={(props) => {
+          return { tabBarVisible: getTabBarVisibility(props.route) };
+        }}
+      />
+      <Tab.Screen
+        name={AppRoutes.NOTIFICATION_TAB}
+        component={HomeNavigator}
+        options={(props) => {
+          return { tabBarVisible: getTabBarVisibility(props.route) };
+        }}
+      />
+      <Tab.Screen
+        name={AppRoutes.PROFILE_TAB}
+        component={ProfileNavigator}
+        options={(props) => {
+          return { tabBarVisible: getTabBarVisibility(props.route) };
+        }}
+      />
+      <Tab.Screen
+        name={AppRoutes.SEARCH_SCREEN}
+        component={HomeNavigator}
+        options={(props) => {
+          return { tabBarVisible: getTabBarVisibility(props.route) };
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
 
 export const AppNavigator = () => {
   const { navigate } = useNavigation();
