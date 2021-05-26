@@ -16,7 +16,7 @@ const Home = React.memo(() => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ ...styles.viewWrapper, ...styles.row, ...styles.spaceBetween }}>
+      <View style={{ ...styles.viewWrapper, ...styles.row, ...styles.spaceBetween, paddingTop: 60 }}>
         <NativeImage uri={user?.avatar || ''} style={styles.avatarImage} />
         <TouchableOpacity style={styles.input} onPress={() => navigate(AppRoutes.CREATE_POST)}>
           <Text style={{ color: 'gray' }}>Bạn đang nghĩ gì?</Text>
@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     flex: 1,
-    marginTop: 60,
   },
   row: {
     flexDirection: 'row',

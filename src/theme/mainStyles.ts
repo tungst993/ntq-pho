@@ -12,7 +12,6 @@ export const mainStyles = StyleSheet.create({
   rowCenter: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   spaceBetween: {
     justifyContent: 'space-between',
@@ -23,7 +22,7 @@ export const mainStyles = StyleSheet.create({
     borderRadius: 40,
   },
   viewWrapper: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     backgroundColor: 'white',
   },
   input: {
