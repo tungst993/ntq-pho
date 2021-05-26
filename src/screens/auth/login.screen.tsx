@@ -1,26 +1,27 @@
 import React, { memo, useState, useEffect } from 'react';
-import { View, StyleSheet, Platform, Image } from 'react-native';
+import { View, StyleSheet, Platform, Image, TouchableOpacity, Text } from 'react-native';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-import Typography from '../../theme/Typography';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
 import { Images } from '../../assets1/icons';
 import type { AuthLoginScreenProp } from '../../navigator/auth.navigator';
 import type { ThemeColors } from '../../types/theme';
 import ZaloKit from 'react-native-zalo-kit';
 import { themeState } from '../../recoil/theme/atoms';
-import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-google-signin/google-signin';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { isLoginState } from '../../recoil/auth/atoms';
 import { useLoginWithSnsMutation } from '../../graphql/mutations/loginWithSNS.generated';
 import { MeDocument } from '../../graphql/queries/me.generated';
-import { somethingWentWrongErrorNotification } from '../../helpers/notifications';
+import { showErrorNotification, somethingWentWrongErrorNotification } from '../../helpers/notifications';
 import { saveToken } from '../../helpers/storage';
 import { useNavigation } from '@react-navigation/native';
 import { AppRoutes } from '../../navigator/app-routes';
 import Background from '../../components/Background';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import LoadingIndicator from '../../components/shared/LoadingIndicator';
+import { IconSizes } from '../../theme/Icon';
 
 GoogleSignin.configure();
 
-const { FontWeights, FontSizes } = Typography;
 type Props = {
   navigation: AuthLoginScreenProp;
   route: any;
@@ -32,10 +33,10 @@ const LoginScreen = memo<Props>(() => {
   const setIsLogin = useSetRecoilState(isLoginState);
   const { navigate } = useNavigation();
 
-  const [loginWithSns] = useLoginWithSnsMutation({
+  const [loginWithSns, { loading }] = useLoginWithSnsMutation({
     onCompleted: (res) => {
       if (res.loginWithSNS.user.isNew) {
-        navigate(AppRoutes.UPDATE_DEPARTMENT_INFO);
+        navigate(AppRoutes.WELCOME_SCREEN);
       } else {
         setIsLogin(true);
       }
@@ -43,7 +44,7 @@ const LoginScreen = memo<Props>(() => {
     onError: (err) => {
       console.log('loginWithSns', err);
       setIsLogin(false);
-      somethingWentWrongErrorNotification();
+      showErrorNotification(err.message);
     },
     update: async (proxy, { data, errors }) => {
       if (data?.loginWithSNS?.user) {
@@ -88,7 +89,6 @@ const LoginScreen = memo<Props>(() => {
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.signIn();
       const token = await GoogleSignin.getTokens();
-      console.log('token', token);
 
       loginWithSns({
         variables: {
@@ -116,15 +116,18 @@ const LoginScreen = memo<Props>(() => {
 
   if (!initializing) {
     content = (
-      <Background>
+      <Background style={{ marginTop: 40 }}>
         <Image source={Images.ntqLogo} />
-        <GoogleSigninButton
-          style={{ width: responsiveWidth(55), height: 48, marginTop: 40 }}
-          size={GoogleSigninButton.Size.Wide}
-          color={GoogleSigninButton.Color.Dark}
-          // title="GG"
-          onPress={signIn}
-        />
+        <TouchableOpacity style={styles(theme).loginButton} onPress={signIn}>
+          {loading ? (
+            <LoadingIndicator color="#000000" size={IconSizes.x4} />
+          ) : (
+            <>
+              <Ionicons name="logo-google" style={{ fontSize: 20 }} />
+              <Text style={styles(theme).loginButtonText}>Đăng nhập với Gmail</Text>
+            </>
+          )}
+        </TouchableOpacity>
       </Background>
     );
   }
@@ -147,21 +150,6 @@ const styles = (theme = {} as ThemeColors) =>
       justifyContent: 'space-between',
       alignItems: 'center',
     },
-    content: {
-      marginTop: responsiveHeight(8),
-      marginHorizontal: 20,
-    },
-    titleText: {
-      ...FontWeights.Bold,
-      ...FontSizes.Heading,
-      color: theme.text01,
-    },
-    subtitleText: {
-      ...FontWeights.Light,
-      ...FontSizes.Label,
-      marginTop: 10,
-      color: theme.text02,
-    },
     banner: {
       flex: 1,
       width: responsiveWidth(100),
@@ -170,39 +158,21 @@ const styles = (theme = {} as ThemeColors) =>
     },
 
     loginButton: {
-      height: 44,
-      width: responsiveWidth(90),
+      height: 52,
+      width: '80%',
       alignSelf: 'center',
       marginBottom: 10,
-      borderWidth: Platform.select({ ios: StyleSheet.hairlineWidth, android: 0.8 }),
-      borderColor: theme.accent,
-      backgroundColor: theme.base,
+      backgroundColor: theme.white,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 40,
+      flexDirection: 'row',
     },
     loginButtonText: {
-      ...FontWeights.Regular,
-      ...FontSizes.Body,
+      fontWeight: '600',
+      fontSize: 16,
       marginLeft: 10,
       color: theme.text01,
-    },
-    appleSignIn: {
-      height: 44,
-      width: responsiveWidth(90),
-      marginBottom: 10,
-    },
-    loadingAppleLogin: {
-      height: 44,
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: 10,
-    },
-    terms: {
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    termsText: {
-      ...FontWeights.Light,
-      ...FontSizes.Body,
-      color: theme.text02,
     },
   });
 export default LoginScreen;

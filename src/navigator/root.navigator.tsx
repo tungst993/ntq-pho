@@ -33,16 +33,6 @@ export const RootNavigator = (props: Partial<RootStackNavigatorProps>): React.Re
       ) : (
         <>
           <Stack.Screen name={AppRoutes.AUTH} component={AuthNavigator} />
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name={AppRoutes.UPDATE_DEPARTMENT_INFO}
-            component={UpdateDepartmentInfo}
-          />
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name={AppRoutes.UPDATE_POSITION_INFO}
-            component={UpdatePositInfo}
-          />
           <Stack.Screen options={{ headerShown: false }} name={AppRoutes.WELCOME_SCREEN} component={WelcomeScreen} />
         </>
       )}

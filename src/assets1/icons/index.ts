@@ -13,4 +13,6 @@ export const Images = {
   ntqLogo: require('./ntq-logo.png'),
   ntqLogoBlue: require('./ntq-logo-blue.png'),
   welcome: require('./welcome.png'),
+  ggLogo: require('./ggLogo.jpg'),
+  onBoard: require('./on_board.jpeg'),
 };

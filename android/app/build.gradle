@@ -138,6 +138,7 @@ android {
     }
 
     defaultConfig {
+        targetSdkVersion 27
         applicationId "com.appg.ericchi"
         renderscriptTargetApi rootProject.ext.renderscriptVersion
         renderscriptSupportModeEnabled true
@@ -146,6 +147,8 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+
     }
     splits {
         abi {
