@@ -5,9 +5,11 @@ import { AppRoutes } from './app-routes';
 import type { CompositeNavigationProp } from '@react-navigation/native';
 import type { RootStackParamList } from './root.navigator';
 import LoginScreen from '../screens/auth/login.screen';
+// import HomeScreen from '../screens/home/home.screen';
 
 export type AuthStackParamList = {
   [AppRoutes.LOGIN]: undefined;
+  // [AppRoutes.HOME]: undefined;
 };
 
 const Stack = createNativeStackNavigator<AuthStackParamList>();
@@ -33,6 +35,7 @@ export const AuthNavigator = () => {
         }}
         component={LoginScreen}
       />
+      {/* <Stack.Screen name={AppRoutes.HOME} component={HomeScreen} /> */}
     </Stack.Navigator>
   );
 };

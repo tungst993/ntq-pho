@@ -15,14 +15,14 @@ const App = () => {
   return (
     <ApolloProvider client={client}>
       <RecoilRoot>
-        {/* <SafeAreaProvider> */}
-        <StatusBar backgroundColor="transparent" />
-        <NavigationContainer
-          theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
-          fallback={<Text>Loading...</Text>}>
-          <RootApp />
-        </NavigationContainer>
-        {/* </SafeAreaProvider> */}
+        <SafeAreaProvider>
+          <StatusBar backgroundColor="transparent" />
+          <NavigationContainer
+            theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+            fallback={<Text>Loading...</Text>}>
+            <RootApp />
+          </NavigationContainer>
+        </SafeAreaProvider>
       </RecoilRoot>
     </ApolloProvider>
   );
