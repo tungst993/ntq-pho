@@ -1,17 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Button } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-import { useSetRecoilState } from 'recoil';
 import NativeImage from '../../components/shared/NativeImage';
 import { useCurrentUser } from '../../hooks/useCurrentUser';
 import { AppRoutes } from '../../navigator/app-routes';
-import { isLoginState } from '../../recoil/auth/atoms';
 
 const Home = React.memo(() => {
   const { navigate } = useNavigation();
 
-  const setIsLogin = useSetRecoilState(isLoginState);
   const user = useCurrentUser();
 
   return (
@@ -22,7 +19,6 @@ const Home = React.memo(() => {
           <Text style={{ color: 'gray' }}>Bạn đang nghĩ gì?</Text>
         </TouchableOpacity>
       </View>
-      <Button title="Logout" onPress={() => setIsLogin(false)} />
     </SafeAreaView>
   );
 });
