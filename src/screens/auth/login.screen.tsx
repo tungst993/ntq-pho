@@ -120,7 +120,7 @@ const LoginScreen = memo<Props>(() => {
         <Image source={Images.ntqLogo} />
         <TouchableOpacity style={styles(theme).loginButton} onPress={signIn}>
           {loading ? (
-            <LoadingIndicator color="#000000" size={IconSizes.x4} />
+            <LoadingIndicator color="#000000" size={IconSizes.x1} />
           ) : (
             <>
               <Ionicons name="logo-google" style={{ fontSize: 20 }} />

@@ -121,15 +121,15 @@ export type Post = Node & {
   creatorId: Scalars['Float'];
   medias?: Maybe<Array<Scalars['Float']>>;
   caption?: Maybe<Scalars['String']>;
-  rawCaption?: Maybe<Scalars['String']>;
+  groupId?: Maybe<Scalars['Float']>;
+  department?: Maybe<UserDepartmentEnum>;
+  isPinned: Scalars['Boolean'];
   actualLike: Scalars['Float'];
-  isPublic: Scalars['Boolean'];
   score: Scalars['Float'];
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
   totalLike: Scalars['Float'];
   isLike: Scalars['Boolean'];
-  mediasPath?: Maybe<Array<Media>>;
   creatorInfo?: Maybe<User>;
 };
 
@@ -143,14 +143,6 @@ export type PostEdge = {
   __typename?: 'PostEdge';
   cursor: Scalars['String'];
   node: Post;
-};
-
-export type PostCursorConnection = {
-  __typename?: 'PostCursorConnection';
-  edges?: Maybe<Array<PostEdge>>;
-  nodes?: Maybe<Array<Post>>;
-  totalCount: Scalars['Int'];
-  pageInfo: PageInfo;
 };
 
 export type Comments = Node & {
@@ -185,21 +177,6 @@ export type Like = Node & {
   createdAt: Scalars['DateTime'];
   creatorInfo: User;
   postInfo: Post;
-};
-
-export type Report = Node & {
-  __typename?: 'Report';
-  id: Scalars['Float'];
-  postId: Scalars['Float'];
-  userId: Scalars['Float'];
-  createdAt: Scalars['DateTime'];
-  postInfo?: Maybe<Post>;
-};
-
-export type ReportPostConnection = {
-  __typename?: 'ReportPostConnection';
-  items?: Maybe<Array<Report>>;
-  meta: BasePaginationMeta;
 };
 
 export type Notification = Node & {
@@ -289,6 +266,31 @@ export type ReceivedMessage = {
   message: Message;
 };
 
+export type Group = Node & {
+  __typename?: 'Group';
+  id: Scalars['Float'];
+  name: Scalars['String'];
+  administrators: Array<Scalars['Float']>;
+  creator: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type GroupConnection = {
+  __typename?: 'GroupConnection';
+  items?: Maybe<Array<Group>>;
+  meta: BasePaginationMeta;
+};
+
+export type GroupMember = Node & {
+  __typename?: 'GroupMember';
+  id: Scalars['Float'];
+  userId: Scalars['Float'];
+  groupId: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+};
+
 export type Query = {
   __typename?: 'Query';
   me: User;
@@ -300,15 +302,15 @@ export type Query = {
   countUnSeenNotification: Scalars['Float'];
   getUserLikePost: Array<User>;
   getPostComment: CommentConnection;
-  test: PostCursorConnection;
   getPostDetail: Post;
   myPost: PostConnection;
   getUserPost: PostConnection;
-  getReportedPost: ReportPostConnection;
   getChats: ChatConnection;
   getExistChat?: Maybe<Chat>;
   getChatHasUnseenMessage: Array<Scalars['Float']>;
   getMessage: MessageConnection;
+  myGroup: GroupConnection;
+  searchGroup: GroupConnection;
 };
 
 export type QueryGetUserInfoArgs = {
@@ -346,14 +348,6 @@ export type QueryGetPostCommentArgs = {
   postId: Scalars['Float'];
 };
 
-export type QueryTestArgs = {
-  first?: Maybe<Scalars['Int']>;
-  after?: Maybe<Scalars['String']>;
-  type: Scalars['String'];
-  validateCursor?: Maybe<Scalars['Boolean']>;
-  cursorKey: Scalars['String'];
-};
-
 export type QueryGetPostDetailArgs = {
   id: Scalars['Float'];
 };
@@ -369,11 +363,6 @@ export type QueryGetUserPostArgs = {
   userId: Scalars['Float'];
 };
 
-export type QueryGetReportedPostArgs = {
-  page: Scalars['Float'];
-  limit: Scalars['Float'];
-};
-
 export type QueryGetChatsArgs = {
   page: Scalars['Float'];
   limit: Scalars['Float'];
@@ -387,6 +376,17 @@ export type QueryGetMessageArgs = {
   page: Scalars['Float'];
   limit: Scalars['Float'];
   chatId: Scalars['Float'];
+};
+
+export type QueryMyGroupArgs = {
+  page?: Maybe<Scalars['Float']>;
+  limit?: Maybe<Scalars['Float']>;
+};
+
+export type QuerySearchGroupArgs = {
+  page?: Maybe<Scalars['Float']>;
+  limit?: Maybe<Scalars['Float']>;
+  search?: Maybe<Scalars['String']>;
 };
 
 export type Mutation = {
@@ -408,12 +408,14 @@ export type Mutation = {
   updatePost: Post;
   removePost: Scalars['Boolean'];
   reactToPost: Scalars['Boolean'];
-  reportPost: Scalars['Boolean'];
-  removeReportedPost: Scalars['Boolean'];
   createChat: Chat;
   deleteChat: Scalars['Float'];
   sendMessage: Message;
   setSeenMessage: Scalars['Boolean'];
+  createGroup: Group;
+  updateGroup: Group;
+  /** Return id nhóm vừa xoá */
+  deleteGroup: Scalars['Float'];
 };
 
 export type MutationUpdateUserInfoArgs = {
@@ -477,14 +479,6 @@ export type MutationReactToPostArgs = {
   postId: Scalars['Float'];
 };
 
-export type MutationReportPostArgs = {
-  postId: Scalars['Float'];
-};
-
-export type MutationRemoveReportedPostArgs = {
-  id: Scalars['Float'];
-};
-
 export type MutationCreateChatArgs = {
   participants: Array<Scalars['Float']>;
 };
@@ -499,6 +493,18 @@ export type MutationSendMessageArgs = {
 
 export type MutationSetSeenMessageArgs = {
   chatId: Scalars['Float'];
+};
+
+export type MutationCreateGroupArgs = {
+  input: CreateGroupDto;
+};
+
+export type MutationUpdateGroupArgs = {
+  input: UpdateGroupDto;
+};
+
+export type MutationDeleteGroupArgs = {
+  id: Scalars['Float'];
 };
 
 export type UpdateUserInput = {
@@ -533,15 +539,17 @@ export type UpdateCommentInput = {
 export type CreatePostInput = {
   medias?: Maybe<Array<Scalars['Float']>>;
   caption?: Maybe<Scalars['String']>;
-  rawCaption?: Maybe<Scalars['String']>;
-  isPublic?: Maybe<Scalars['Boolean']>;
+  groupId?: Maybe<Scalars['Float']>;
+  department?: Maybe<Scalars['String']>;
+  isPinned?: Maybe<Scalars['Boolean']>;
 };
 
 export type UpdatePostInput = {
   medias?: Maybe<Array<Scalars['Float']>>;
   caption?: Maybe<Scalars['String']>;
-  rawCaption?: Maybe<Scalars['String']>;
-  isPublic?: Maybe<Scalars['Boolean']>;
+  groupId?: Maybe<Scalars['Float']>;
+  department?: Maybe<Scalars['String']>;
+  isPinned?: Maybe<Scalars['Boolean']>;
   id: Scalars['Float'];
 };
 
@@ -551,6 +559,16 @@ export type NewMessageInput = {
   media?: Maybe<Scalars['String']>;
   mediaType?: Maybe<MediaType>;
   tempId: Scalars['String'];
+};
+
+export type CreateGroupDto = {
+  name: Scalars['String'];
+};
+
+export type UpdateGroupDto = {
+  name: Scalars['String'];
+  id: Scalars['Float'];
+  administrator: Array<Scalars['Float']>;
 };
 
 export type Subscription = {

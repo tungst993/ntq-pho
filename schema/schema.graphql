@@ -105,15 +105,15 @@ type Post implements Node {
   creatorId: Float!
   medias: [Float!]
   caption: String
-  rawCaption: String
+  groupId: Float
+  department: UserDepartmentEnum
+  isPinned: Boolean!
   actualLike: Float!
-  isPublic: Boolean!
   score: Float!
   createdAt: DateTime!
   updatedAt: DateTime!
   totalLike: Float!
   isLike: Boolean!
-  mediasPath: [Media!]
   creatorInfo: User
 }
 
@@ -125,13 +125,6 @@ type PostConnection {
 type PostEdge {
   cursor: String!
   node: Post!
-}
-
-type PostCursorConnection {
-  edges: [PostEdge!]
-  nodes: [Post!]
-  totalCount: Int!
-  pageInfo: PageInfo!
 }
 
 type Comments implements Node {
@@ -162,19 +155,6 @@ type Like implements Node {
   createdAt: DateTime!
   creatorInfo: User!
   postInfo: Post!
-}
-
-type Report implements Node {
-  id: Float!
-  postId: Float!
-  userId: Float!
-  createdAt: DateTime!
-  postInfo: Post
-}
-
-type ReportPostConnection {
-  items: [Report!]
-  meta: BasePaginationMeta!
 }
 
 type Notification implements Node {
@@ -256,6 +236,28 @@ type ReceivedMessage {
   message: Message!
 }
 
+type Group implements Node {
+  id: Float!
+  name: String!
+  administrators: [Float!]!
+  creator: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type GroupConnection {
+  items: [Group!]
+  meta: BasePaginationMeta!
+}
+
+type GroupMember implements Node {
+  id: Float!
+  userId: Float!
+  groupId: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   me: User!
   getUserInfo(id: Float!): User
@@ -266,29 +268,15 @@ type Query {
   countUnSeenNotification: Float!
   getUserLikePost(postId: Float!): [User!]!
   getPostComment(page: Float!, limit: Float!, postId: Float!): CommentConnection!
-  test(
-    first: Int = 10
-    after: String
-
-    """
-    Pass input type of search value
-    """
-    type: String!
-    validateCursor: Boolean = false
-
-    """
-    Pass the key value to search and sort data
-    """
-    cursorKey: String!
-  ): PostCursorConnection!
   getPostDetail(id: Float!): Post!
   myPost(page: Float!, limit: Float!): PostConnection!
   getUserPost(page: Float!, limit: Float!, userId: Float!): PostConnection!
-  getReportedPost(page: Float!, limit: Float!): ReportPostConnection!
   getChats(page: Float!, limit: Float!): ChatConnection!
   getExistChat(participants: [Float!]!): Chat
   getChatHasUnseenMessage: [Float!]!
   getMessage(page: Float!, limit: Float!, chatId: Float!): MessageConnection!
+  myGroup(page: Float = 1, limit: Float = 10): GroupConnection!
+  searchGroup(page: Float = 1, limit: Float = 10, search: String = ""): GroupConnection!
 }
 
 type Mutation {
@@ -309,12 +297,17 @@ type Mutation {
   updatePost(input: UpdatePostInput!): Post!
   removePost(id: Float!): Boolean!
   reactToPost(postId: Float!): Boolean!
-  reportPost(postId: Float!): Boolean!
-  removeReportedPost(id: Float!): Boolean!
   createChat(participants: [Float!]!): Chat!
   deleteChat(id: Float!): Float!
   sendMessage(input: NewMessageInput!): Message!
   setSeenMessage(chatId: Float!): Boolean!
+  createGroup(input: CreateGroupDto!): Group!
+  updateGroup(input: UpdateGroupDto!): Group!
+
+  """
+  Return id nhóm vừa xoá
+  """
+  deleteGroup(id: Float!): Float!
 }
 
 input UpdateUserInput {
@@ -354,15 +347,17 @@ input UpdateCommentInput {
 input CreatePostInput {
   medias: [Float!] = []
   caption: String = ""
-  rawCaption: String = ""
-  isPublic: Boolean = true
+  groupId: Float
+  department: String
+  isPinned: Boolean = false
 }
 
 input UpdatePostInput {
   medias: [Float!] = []
   caption: String = ""
-  rawCaption: String = ""
-  isPublic: Boolean = true
+  groupId: Float
+  department: String
+  isPinned: Boolean = false
   id: Float!
 }
 
@@ -372,6 +367,16 @@ input NewMessageInput {
   media: String
   mediaType: MediaType
   tempId: String!
+}
+
+input CreateGroupDto {
+  name: String!
+}
+
+input UpdateGroupDto {
+  name: String!
+  id: Float!
+  administrator: [Float!]!
 }
 
 type Subscription {

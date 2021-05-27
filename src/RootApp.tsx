@@ -26,8 +26,12 @@ const App = React.memo(() => {
       console.log(err);
       setIsLogin(false);
     },
-    onCompleted: () => {
-      setIsLogin(true);
+    onCompleted: (res) => {
+      if (res.me.isNew) {
+        setIsLogin(false);
+      } else {
+        setIsLogin(true);
+      }
     },
   });
 
