@@ -7,8 +7,8 @@ interface NativeImageProps {
   resizeMode?: FastImageProps['resizeMode'];
 }
 
-const NativeImage: React.FC<NativeImageProps> = ({ uri, style, resizeMode = FastImage.resizeMode.stretch }) => {
-  return <FastImage style={style} source={{ uri }} resizeMode={resizeMode} />;
+const NativeImage: React.FC<NativeImageProps> = ({ uri, style }) => {
+  return <FastImage style={style} source={{ uri }} resizeMode={FastImage.resizeMode.cover} />;
 };
 
 export default NativeImage;

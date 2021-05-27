@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
+// import { MaterialColors } from './Colors';
 
 export const mainStyles = StyleSheet.create({
   container: {
@@ -24,6 +25,8 @@ export const mainStyles = StyleSheet.create({
   viewWrapper: {
     paddingHorizontal: 20,
     backgroundColor: 'white',
+    // borderTopColor: MaterialColors.grey[500],
+    // borderTopWidth: 0.5,
   },
   input: {
     height: 40,

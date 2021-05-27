@@ -16,7 +16,6 @@ interface GoBackHeaderProps {
   IconRight?: React.FC;
   iconSize: number;
   titleStyle?: StyleProp<TextStyle>;
-  RightComponent?: React.FC;
   notSpaceBetween?: boolean;
   subTitle?: string;
 }
@@ -28,7 +27,6 @@ const GoBackHeader: React.FC<GoBackHeaderProps> = ({
   IconRight,
   iconSize,
   titleStyle,
-  RightComponent,
   notSpaceBetween = false,
   subTitle,
 }) => {
