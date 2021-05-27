@@ -30,7 +30,7 @@ const WelcomeScreen = React.memo(() => {
   const [upload] = useFileUpload();
 
   const [step, setStep] = useState(0);
-  const [selectedImage, setSelectedImage] = useState<PickerImage>({} as PickerImage);
+  const [selectedImage, setSelectedImage] = useState<PickerImage>();
   const [editAvatar, setEditAvatar] = useState(user?.avatar ?? '');
   const [department, setDepartment] = useState<UserDepartmentEnum>();
   const [position, setPosition] = useState<UserPositionEnum>();
