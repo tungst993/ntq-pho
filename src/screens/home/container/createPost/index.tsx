@@ -9,7 +9,9 @@ import { useCurrentUser } from '../../../../hooks/useCurrentUser';
 import AntIcons from 'react-native-vector-icons/AntDesign';
 import { IconSizes } from '../../../../theme/Icon';
 import { mainStyles } from '../../../../theme/mainStyles';
-import { ThemeStatic } from '../../../../theme';
+import { ThemeStatic, Typography } from '../../../../theme';
+
+const { FontWeights, FontSizes } = Typography;
 
 const CreatePost = React.memo(() => {
   const { goBack } = useNavigation();
@@ -27,38 +29,36 @@ const CreatePost = React.memo(() => {
         </TouchableOpacity>
       </LinearGradient>
 
-      {/* <View style={styles.viewWrapper}>
+      <View style={{ ...styles.userInfoWrapper, ...mainStyles.viewWrapper }}>
         <NativeImage uri={user?.avatar || ''} style={styles.avatarImage} />
-        <Text style={styles.text}>{user?.fullName}</Text>
-        <Text style={styles.text}>
-          {user?.department}-{user?.position}
-        </Text>
-      </View> */}
-
-      <View style={{ ...styles.viewWrapper, position: 'relative' }}>
-        <View style={{ position: 'absolute', top: -30 }}>
-          <View style={{ width: responsiveWidth(100) }}>
-            <View style={{ ...styles.input, ...styles.shadow }}>
-              <TextInput style={{}} placeholder="Bạn đang nghĩ gì?" />
-            </View>
-          </View>
-          <View>
-            <Text style={styles.text}>Ảnh</Text>
-          </View>
-
-          <View>
-            <Text style={styles.text}>Video</Text>
-          </View>
-
-          <View>
-            <Text style={styles.text}>Tạo vote</Text>
-          </View>
-          <View>
-            <TouchableOpacity>
-              <Text style={styles.text}>Đăng</Text>
-            </TouchableOpacity>
+        <View style={styles.userInfo}>
+          <Text style={styles.nameText}>{`${user?.fullName || ''}`}</Text>
+          <View style={{ ...mainStyles.rowCenter }}>
+            <AntIcons name="star" size={IconSizes.x5} color={ThemeStatic.accent} />
+            <Text style={{ ...styles.nameText, marginLeft: 5 }}>{user?.position}</Text>
           </View>
         </View>
+      </View>
+
+      <View style={{ ...mainStyles.viewWrapper }}>
+        <TextInput multiline numberOfLines={10} style={{ ...styles.input }} placeholder="Bạn đang nghĩ gì?" />
+      </View>
+
+      <View>
+        <Text style={styles.text}>Ảnh</Text>
+      </View>
+
+      <View>
+        <Text style={styles.text}>Video</Text>
+      </View>
+
+      <View>
+        <Text style={styles.text}>Tạo vote</Text>
+      </View>
+      <View>
+        <TouchableOpacity>
+          <Text style={styles.text}>Đăng</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 60,
+    paddingBottom: 20,
   },
   row: {
     flexDirection: 'row',
@@ -85,20 +85,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   avatarImage: {
-    height: 40,
-    width: 40,
-    borderRadius: 40,
-  },
-  viewWrapper: {
-    backgroundColor: 'red',
+    height: 50,
+    width: 50,
+    borderRadius: 50,
   },
   input: {
-    height: responsiveHeight(30),
-    marginHorizontal: 20,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    borderColor: 'gray',
-    backgroundColor: 'white',
+    height: 40,
+    backgroundColor: 'red',
   },
   text: {
     color: ThemeStatic.white,
@@ -112,8 +105,23 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
+  },
+  userInfoWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 20,
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1,
+  },
+  userInfo: {
+    // flexDirection: 'row',
+    // alignItems: 'center',
+    marginLeft: 12,
+  },
+  nameText: {
+    ...FontSizes.Label,
+    ...FontWeights.Bold,
   },
 });
 
