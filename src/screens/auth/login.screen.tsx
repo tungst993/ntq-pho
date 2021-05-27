@@ -11,7 +11,7 @@ import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-si
 import { isLoginState } from '../../recoil/auth/atoms';
 import { useLoginWithSnsMutation } from '../../graphql/mutations/loginWithSNS.generated';
 import { MeDocument } from '../../graphql/queries/me.generated';
-import { showErrorNotification, somethingWentWrongErrorNotification } from '../../helpers/notifications';
+import { showErrorNotification } from '../../helpers/notifications';
 import { saveToken } from '../../helpers/storage';
 import { useNavigation } from '@react-navigation/native';
 import { AppRoutes } from '../../navigator/app-routes';
@@ -120,10 +120,10 @@ const LoginScreen = memo<Props>(() => {
         <Image source={Images.ntqLogo} />
         <TouchableOpacity style={styles(theme).loginButton} onPress={signIn}>
           {loading ? (
-            <LoadingIndicator color="#000000" size={IconSizes.x1} />
+            <LoadingIndicator color={theme.text01} size={IconSizes.x1} />
           ) : (
             <>
-              <Ionicons name="logo-google" style={{ fontSize: 20 }} />
+              <Ionicons name="logo-google" style={{ fontSize: 20, color: theme.text01 }} />
               <Text style={styles(theme).loginButtonText}>Đăng nhập với Gmail</Text>
             </>
           )}
@@ -162,7 +162,7 @@ const styles = (theme = {} as ThemeColors) =>
       width: '80%',
       alignSelf: 'center',
       marginBottom: 10,
-      backgroundColor: theme.white,
+      backgroundColor: theme.base,
       justifyContent: 'center',
       alignItems: 'center',
       borderRadius: 40,
