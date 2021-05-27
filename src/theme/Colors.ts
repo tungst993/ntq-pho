@@ -50,6 +50,8 @@ export const Theme: {
     colors: {
       accent: 'rgb(35, 105, 178)',
       base: '#FFFFFF',
+      secondary: '#F0F2F5',
+      comment: '#F0F2F5',
       text01: '#000000',
       text02: '#BBBBBB',
       placeholder: '#F4F4F4',
@@ -61,7 +63,9 @@ export const Theme: {
     type: 'dark',
     colors: {
       accent: 'rgb(35, 105, 178)',
-      base: '#121212',
+      base: '#232526',
+      secondary: '#121212',
+      comment: '#3A3B3D',
       text01: '#FFFFFF',
       text02: '#BBBBBB',
       placeholder: '#222',

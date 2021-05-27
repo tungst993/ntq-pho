@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { RootNavigator } from './navigator/root.navigator';
 import { loadThemeType, saveThemeType } from './helpers/storage';
-import { LogBox, StatusBar, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { LogBox, StatusBar, StyleSheet, View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import type { ThemeColors } from './types/theme';
 import { Typography } from './theme';

@@ -7,6 +7,7 @@ import type { RootStackParamList } from './root.navigator';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import type { MainTabParamList } from './app.navigator';
 import HomeScreen from '../screens/home/home.screen';
+import ProfileScreen from '../screens/profile';
 // import SettingScreen from '../screens/profile/setting.screen';
 
 export type ProfileStackParamList = {
@@ -29,7 +30,7 @@ export const ProfileNavigator = () => (
       title: 'Profile',
       headerShown: false,
     }}>
-    <Stack.Screen name={AppRoutes.PROFILE_VIEW_SCREEN} component={HomeScreen} />
+    <Stack.Screen name={AppRoutes.PROFILE_VIEW_SCREEN} component={ProfileScreen} />
     <Stack.Screen
       name={AppRoutes.SETTING}
       options={{

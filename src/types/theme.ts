@@ -17,6 +17,8 @@ export type ThemeStaticType = {
 export type ThemeColors = {
   accent: string;
   base: string;
+  secondary: string;
+  comment: string;
   text01: string;
   text02: string;
   placeholder: string;

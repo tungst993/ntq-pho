@@ -62,16 +62,17 @@ export const MainNavigator = () => {
           return { tabBarVisible: getTabBarVisibility(props.route) };
         }}
       />
+
       <Tab.Screen
-        name={AppRoutes.PROFILE_TAB}
-        component={ProfileNavigator}
+        name={AppRoutes.SEARCH_SCREEN}
+        component={HomeNavigator}
         options={(props) => {
           return { tabBarVisible: getTabBarVisibility(props.route) };
         }}
       />
       <Tab.Screen
-        name={AppRoutes.SEARCH_SCREEN}
-        component={HomeNavigator}
+        name={AppRoutes.PROFILE_TAB}
+        component={ProfileNavigator}
         options={(props) => {
           return { tabBarVisible: getTabBarVisibility(props.route) };
         }}

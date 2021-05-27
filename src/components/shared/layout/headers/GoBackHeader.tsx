@@ -18,7 +18,7 @@ interface GoBackHeaderProps {
   titleStyle?: StyleProp<TextStyle>;
   RightComponent?: React.FC;
   notSpaceBetween?: boolean;
-  subTitle?: string
+  subTitle?: string;
 }
 
 const GoBackHeader: React.FC<GoBackHeaderProps> = ({
@@ -30,7 +30,7 @@ const GoBackHeader: React.FC<GoBackHeaderProps> = ({
   titleStyle,
   RightComponent,
   notSpaceBetween = false,
-  subTitle
+  subTitle,
 }) => {
   const theme = useRecoilValue(themeState);
   const { goBack } = useNavigation();
@@ -46,9 +46,7 @@ const GoBackHeader: React.FC<GoBackHeaderProps> = ({
             {title}
           </Text>
         )}
-        {subTitle && (
-          <Text style={{ color: theme.text02, ...FontSizes.Caption }}>{subTitle}</Text>
-        )}
+        {subTitle && <Text style={{ color: theme.text02, ...FontSizes.Caption }}>{subTitle}</Text>}
       </View>
 
       {IconRight && (

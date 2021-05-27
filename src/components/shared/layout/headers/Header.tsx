@@ -29,7 +29,6 @@ const styles = (theme = {} as ThemeColors) =>
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingVertical: 10,
-      paddingHorizontal: 20,
     },
     title: {
       ...FontWeights.Bold,

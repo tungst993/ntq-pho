@@ -5,6 +5,7 @@ import { useRecoilValue } from 'recoil';
 import { AppRoutes } from '../app-routes';
 import { themeState } from '../../recoil/theme/atoms';
 import type { ThemeColors } from '../../types/theme';
+import { ifIphoneX } from 'react-native-iphone-x-helper';
 
 const TabBarComponent = ({ navigation, descriptors, state, ...data }: any) => {
   const theme = useRecoilValue(themeState);
@@ -58,6 +59,9 @@ const styles = (theme = {} as ThemeColors) =>
       paddingHorizontal: 10,
       paddingVertical: 12,
       backgroundColor: theme.base,
+      ...ifIphoneX({
+        paddingBottom: 20,
+      }),
     },
     icon: {
       flex: 1,
