@@ -182,7 +182,7 @@ export const PostComponent = (props: PostProps) => {
                   style.image3,
                   {
                     position: 'absolute',
-                    backgroundColor: '#00000040',
+                    backgroundColor: theme.modal,
                     justifyContent: 'center',
                     alignItems: 'center',
                   },
@@ -354,7 +354,7 @@ const styles = (theme = {} as ThemeColors) =>
     },
     textMoreImage: {
       fontSize: 24,
-      color: theme.text01,
+      color: theme.base,
       fontWeight: 'bold',
     },
   });
