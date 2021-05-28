@@ -291,6 +291,40 @@ export type GroupMember = Node & {
   updatedAt: Scalars['DateTime'];
 };
 
+export type TinderProfile = Node & {
+  __typename?: 'TinderProfile';
+  id: Scalars['Float'];
+  images: Array<Scalars['String']>;
+  gender: TinderGenderEnum;
+  target: TinderGenderEnum;
+  intro: Scalars['String'];
+  userId: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export enum TinderGenderEnum {
+  MALE = 'MALE',
+  FEMAILE = 'FEMAILE',
+  ALL = 'ALL',
+}
+
+export type TinderMatch = Node & {
+  __typename?: 'TinderMatch';
+  id: Scalars['Float'];
+  initiator: Scalars['Float'];
+  targetUser: Scalars['Float'];
+  status: TinderMatchStatus;
+  isSuper: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export enum TinderMatchStatus {
+  REQUEST = 'REQUEST',
+  MATCHED = 'MATCHED',
+}
+
 export type Query = {
   __typename?: 'Query';
   me: User;
@@ -311,6 +345,7 @@ export type Query = {
   getMessage: MessageConnection;
   myGroup: GroupConnection;
   searchGroup: GroupConnection;
+  myTinderProfile: TinderProfile;
 };
 
 export type QueryGetUserInfoArgs = {
@@ -416,6 +451,7 @@ export type Mutation = {
   updateGroup: Group;
   /** Return id nhóm vừa xoá */
   deleteGroup: Scalars['Float'];
+  createTinderProfile: TinderProfile;
 };
 
 export type MutationUpdateUserInfoArgs = {
@@ -507,6 +543,10 @@ export type MutationDeleteGroupArgs = {
   id: Scalars['Float'];
 };
 
+export type MutationCreateTinderProfileArgs = {
+  input: CreateTinderProfileDto;
+};
+
 export type UpdateUserInput = {
   avatar?: Maybe<Scalars['String']>;
   intro?: Maybe<Scalars['String']>;
@@ -569,6 +609,13 @@ export type UpdateGroupDto = {
   name: Scalars['String'];
   id: Scalars['Float'];
   administrator: Array<Scalars['Float']>;
+};
+
+export type CreateTinderProfileDto = {
+  images: Array<Scalars['String']>;
+  gender: TinderGenderEnum;
+  target: TinderGenderEnum;
+  intro: Scalars['String'];
 };
 
 export type Subscription = {

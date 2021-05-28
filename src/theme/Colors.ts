@@ -40,6 +40,8 @@ export const ThemeStatic: ThemeStaticType = {
   translucent: 'rgba(0, 0, 0, 0.2)',
   delete: '#F44336',
   badge: '#F24',
+  tinder: '#FD297B',
+  tinderSchema: ['#FD297B', '#FF5864', '#FF655B'],
 };
 
 export const Theme: {
@@ -57,6 +59,7 @@ export const Theme: {
       placeholder: '#F4F4F4',
       white: '#FFFFFF',
       shadow: '#000',
+      modal: 'rgba(0,0,0, 0.5)',
     },
   },
   dark: {
@@ -71,6 +74,7 @@ export const Theme: {
       placeholder: '#222',
       white: '#FFFFFF',
       shadow: '#fff',
+      modal: 'rgba(255,255,255, 0.5)',
     },
   },
 };

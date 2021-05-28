@@ -1,5 +1,18 @@
 {
   "possibleTypes": {
-    "Node": ["User", "Media", "Post", "Comments", "Like", "Notification", "Chat", "Message", "Group", "GroupMember"]
+    "Node": [
+      "User",
+      "Media",
+      "Post",
+      "Comments",
+      "Like",
+      "Notification",
+      "Chat",
+      "Message",
+      "Group",
+      "GroupMember",
+      "TinderProfile",
+      "TinderMatch"
+    ]
   }
 }

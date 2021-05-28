@@ -28,10 +28,7 @@ const Stack = createStackNavigator<AppStackParamList>();
 
 export const MainNavigator = () => {
   const getTabBarVisibility = (route: any) => {
-    console.log(route);
-
     const routeName = getFocusedRouteNameFromRoute(route) || '';
-    console.log('2', routeName);
 
     const allowRoute: string[] = [
       '',
@@ -39,6 +36,7 @@ export const MainNavigator = () => {
       AppRoutes.NOTIFICATION_TAB,
       AppRoutes.PROFILE_TAB,
       AppRoutes.SEARCH_SCREEN,
+      AppRoutes.PROFILE_VIEW_SCREEN,
     ];
     if (!allowRoute.includes(routeName)) {
       return false;

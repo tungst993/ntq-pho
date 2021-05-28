@@ -72,7 +72,6 @@ const WelcomeScreen = React.memo(() => {
           position,
         };
         if (selectedImage) {
-          console.log(selectedImage);
           const image = await upload({
             uri: selectedImage.path,
             type: selectedImage.mime,
@@ -98,7 +97,7 @@ const WelcomeScreen = React.memo(() => {
   };
 
   const chooseImage = async () => {
-    const image = await getImageFromLibrary(120, 120, true);
+    const image = await getImageFromLibrary(300, 300, true);
     if (image) {
       setSelectedImage(image ?? ({} as Image));
       setEditAvatar(image?.path ?? '');

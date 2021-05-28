@@ -1,0 +1,12 @@
+query myTinderProfile {
+  myTinderProfile {
+    id
+    images
+    gender
+    target
+    intro
+    userId
+    createdAt
+    updatedAt
+  }
+}

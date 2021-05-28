@@ -1,17 +1,27 @@
-import React from 'react';
-import { SafeAreaView, StyleSheet, Text } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { useRecoilValue } from 'recoil';
+import { useMyTinderProfileLazyQuery } from '../../graphql/queries/myTinderProfile.generated';
 import { themeState } from '../../recoil/theme/atoms';
 import type { ThemeColors } from '../../types/theme';
+import NewUserProcess from './NewUserProcess';
 
 const TinderAppScreen = () => {
   const theme = useRecoilValue(themeState);
   const styles = useStyle(theme);
 
+  const [getProfile, { data }] = useMyTinderProfileLazyQuery({});
+
+  useEffect(() => {
+    getProfile();
+  }, [getProfile]);
+
+  const profile = data?.myTinderProfile;
+
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={{ color: theme.text01 }}>asdawd</Text>
-    </SafeAreaView>
+    <View style={styles.container}>
+      {profile ? <Text style={{ color: theme.text01 }}>App</Text> : <NewUserProcess />}
+    </View>
   );
 };
 

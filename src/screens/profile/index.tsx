@@ -1,10 +1,10 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ifIphoneX } from 'react-native-iphone-x-helper';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import NativeImage from '../../components/shared/NativeImage';
 import { useCurrentUser } from '../../hooks/useCurrentUser';
-import { themeState } from '../../recoil/theme/atoms';
+import { themeState, themeTypeState } from '../../recoil/theme/atoms';
 import type { ThemeColors } from '../../types/theme';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -12,14 +12,16 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useLogoutMutation } from '../../graphql/mutations/logout.generated';
 import { somethingWentWrongErrorNotification } from '../../helpers/notifications';
 import { isLoginState } from '../../recoil/auth/atoms';
-import { removeToken } from '../../helpers/storage';
+import { removeToken, saveThemeType } from '../../helpers/storage';
 import LoadingIndicator from '../../components/shared/LoadingIndicator';
 import { IconSizes } from '../../theme/Icon';
 import { AppRoutes } from '../../navigator/app-routes';
 import { useNavigation } from '@react-navigation/core';
+import { Theme, ThemeStatic, ThemeVariant } from '../../theme';
 
 const ProfileScreen: React.FC = () => {
-  const theme = useRecoilValue(themeState);
+  const [theme, setTheme] = useRecoilState(themeState);
+  const [themeType, setThemeType] = useRecoilState(themeTypeState);
   const styles = useStyle(theme);
   const user = useCurrentUser();
   const setIsLogin = useSetRecoilState(isLoginState);
@@ -38,6 +40,13 @@ const ProfileScreen: React.FC = () => {
 
   const onLogout = () => {
     logout({});
+  };
+
+  const toggleTheme = async () => {
+    const type = themeType === ThemeVariant.dark ? ThemeVariant.light : ThemeVariant.dark;
+    setTheme(Theme[type].colors);
+    setThemeType(type);
+    await saveThemeType(type);
   };
 
   return (
@@ -132,6 +141,22 @@ const ProfileScreen: React.FC = () => {
               <MaterialIcons name="medical-services" style={{ fontSize: 20 }} color={theme.white} />
             </LinearGradient>
             <Text style={styles.title}>Khái báo y tế </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.item} onPress={toggleTheme}>
+            <LinearGradient
+              colors={['#3A3B3D', '#121212', '#232526']}
+              style={{
+                padding: 6,
+                width: 32,
+                height: 32,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 32,
+                marginBottom: 8,
+              }}>
+              <Ionicons name="moon" style={{ fontSize: 20 }} color={theme.white} />
+            </LinearGradient>
+            <Text style={styles.title}>Chế độ tối</Text>
           </TouchableOpacity>
         </View>
       </View>

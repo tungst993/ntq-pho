@@ -1,0 +1,12 @@
+mutation createTinderProfile($input: CreateTinderProfileDto!) {
+  createTinderProfile(input: $input) {
+    id
+    images
+    gender
+    target
+    intro
+    userId
+    createdAt
+    updatedAt
+  }
+}

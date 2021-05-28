@@ -12,6 +12,8 @@ export type ThemeStaticType = {
   translucent: string;
   delete: string;
   badge: string;
+  tinder: string;
+  tinderSchema: string[];
 };
 
 export type ThemeColors = {
@@ -24,6 +26,7 @@ export type ThemeColors = {
   placeholder: string;
   white: string;
   shadow: string;
+  modal: string;
 };
 
 export type ThemeVariantType = {

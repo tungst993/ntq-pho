@@ -258,6 +258,38 @@ type GroupMember implements Node {
   updatedAt: DateTime!
 }
 
+type TinderProfile implements Node {
+  id: Float!
+  images: [String!]!
+  gender: TinderGenderEnum!
+  target: TinderGenderEnum!
+  intro: String!
+  userId: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum TinderGenderEnum {
+  MALE
+  FEMAILE
+  ALL
+}
+
+type TinderMatch implements Node {
+  id: Float!
+  initiator: Float!
+  targetUser: Float!
+  status: TinderMatchStatus!
+  isSuper: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum TinderMatchStatus {
+  REQUEST
+  MATCHED
+}
+
 type Query {
   me: User!
   getUserInfo(id: Float!): User
@@ -277,6 +309,7 @@ type Query {
   getMessage(page: Float!, limit: Float!, chatId: Float!): MessageConnection!
   myGroup(page: Float = 1, limit: Float = 10): GroupConnection!
   searchGroup(page: Float = 1, limit: Float = 10, search: String = ""): GroupConnection!
+  myTinderProfile: TinderProfile!
 }
 
 type Mutation {
@@ -308,6 +341,7 @@ type Mutation {
   Return id nhóm vừa xoá
   """
   deleteGroup(id: Float!): Float!
+  createTinderProfile(input: CreateTinderProfileDto!): TinderProfile!
 }
 
 input UpdateUserInput {
@@ -377,6 +411,13 @@ input UpdateGroupDto {
   name: String!
   id: Float!
   administrator: [Float!]!
+}
+
+input CreateTinderProfileDto {
+  images: [String!]!
+  gender: TinderGenderEnum!
+  target: TinderGenderEnum!
+  intro: String!
 }
 
 type Subscription {

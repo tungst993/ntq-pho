@@ -1,4 +1,4 @@
-import { UserDepartmentEnum, UserPositionEnum } from '../graphql/type.interface';
+import { TinderGenderEnum, UserDepartmentEnum, UserPositionEnum } from '../graphql/type.interface';
 
 export const listDepartment = [
   UserDepartmentEnum.OS8,
@@ -20,3 +20,5 @@ export const listPosition = [
   UserPositionEnum.TEAM_LEAD,
   UserPositionEnum.DM,
 ];
+
+export const genderList = [TinderGenderEnum.MALE, TinderGenderEnum.FEMAILE, TinderGenderEnum.ALL];
