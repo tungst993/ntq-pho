@@ -14,6 +14,7 @@ export type ThemeStaticType = {
   badge: string;
   tinder: string;
   tinderSchema: string[];
+  commonSchema: string[];
 };
 
 export type ThemeColors = {

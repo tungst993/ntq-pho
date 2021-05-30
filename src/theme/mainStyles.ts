@@ -24,7 +24,7 @@ export const mainStyles = StyleSheet.create({
   },
   viewWrapper: {
     paddingHorizontal: 20,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     // borderTopColor: MaterialColors.grey[500],
     // borderTopWidth: 0.5,
   },

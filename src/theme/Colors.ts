@@ -42,6 +42,7 @@ export const ThemeStatic: ThemeStaticType = {
   badge: '#F24',
   tinder: '#FD297B',
   tinderSchema: ['#FD297B', '#FF5864', '#FF655B'],
+  commonSchema: ['#36d1dc', '#5b86e5'],
 };
 
 export const Theme: {

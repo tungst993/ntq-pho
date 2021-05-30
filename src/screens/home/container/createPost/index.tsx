@@ -19,7 +19,6 @@ import { themeState } from '../../../../recoil/theme/atoms';
 import type { ThemeColors, ThemeType } from '../../../../types/theme';
 import GoBackHeader from '../../../../components/shared/layout/headers/GoBackHeader';
 import { ifIphoneX } from 'react-native-iphone-x-helper';
-import image from 'antd/lib/image';
 import { useFileUpload } from '../../../../hooks/useFileUpload';
 import { getImageFromLibrary } from '../../../../utils/shared';
 
@@ -45,20 +44,39 @@ const CreatePost = React.memo(() => {
 
   return (
     <View style={styles.container}>
-      <GoBackHeader
-        title="Tạo bài viết"
-        iconSize={IconSizes.x5}
-        IconRight={() => (
-          <TouchableOpacity onPress={goBack}>
-            <Text style={{ ...styles.text, fontWeight: 'bold' }}>Đăng</Text>
-          </TouchableOpacity>
-        )}
-      />
-
-      <View style={{ ...mainStyles.viewWrapper, marginTop: 10 }}>
-        <TextInput multiline numberOfLines={10} style={{ ...styles.input }} placeholder="Bạn đang nghĩ gì?" />
+      <LinearGradient
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        colors={ThemeStatic.commonSchema}
+        style={styles.header}>
+        <GoBackHeader
+          title="Tạo bài viết"
+          iconSize={IconSizes.x5}
+          IconRight={() => (
+            <TouchableOpacity onPress={goBack}>
+              <Text style={{ ...styles.text, fontWeight: 'bold' }}>Đăng</Text>
+            </TouchableOpacity>
+          )}
+        />
+      </LinearGradient>
+      <View style={{ ...mainStyles.viewWrapper, marginTop: 40 }}>
+        <TextInput
+          multiline
+          numberOfLines={10}
+          style={{ ...styles.input }}
+          placeholder="Bạn đang nghĩ gì?"
+          placeholderTextColor={theme.text02}
+        />
       </View>
-
+      <LinearGradient
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        colors={ThemeStatic.commonSchema}
+        style={{
+          height: 1,
+          marginHorizontal: 20,
+        }}
+      />
       {listImage.length > 0 && (
         <View style={styles.listImageWrapper}>
           <View style={styles.editImage}>
@@ -74,23 +92,53 @@ const CreatePost = React.memo(() => {
           ))}
         </View>
       )}
+      <View style={{ ...styles.navBottom }}>
+        <LinearGradient
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          colors={ThemeStatic.commonSchema}
+          style={{ padding: 1, borderRadius: 10 }}>
+          <View
+            style={{
+              ...mainStyles.rowCenter,
+              justifyContent: 'space-between',
+              width: '100%',
+              borderColor: MaterialColors.grey[500],
+              padding: 20,
+              borderRadius: 10,
+              backgroundColor: theme.base,
+            }}>
+            <View>
+              <Text style={styles.textAddMore}>Thêm vào bài viết</Text>
+            </View>
+            <View style={{ ...styles.row }}>
+              <Ionicons
+                color={MaterialColors.green[500]}
+                style={{ marginRight: 20 }}
+                name="ios-images"
+                size={IconSizes.x6}
+                onPress={chooseImage}
+              />
 
-      <View style={{ ...styles.navBottom, ...styles.row }}>
-        <View>
-          <Text style={styles.textAddMore}>Thêm vào bài viết</Text>
-        </View>
-        <View style={{ ...styles.row }}>
-          <Ionicons
-            color={MaterialColors.green[500]}
-            style={{ marginRight: 20 }}
-            name="ios-images"
-            size={IconSizes.x6}
-            onPress={chooseImage}
-          />
-
-          <Ionicons color={MaterialColors.orange[500]} name="md-stats-chart" size={IconSizes.x6} onPress={() => {}} />
-          {/* <EntypoIcons color={MaterialColors.red[500]} name="video" size={IconSizes.x5} /> */}
-        </View>
+              <Ionicons
+                color={MaterialColors.orange[500]}
+                name="md-stats-chart"
+                size={IconSizes.x6}
+                onPress={() => {}}
+              />
+              {/* <EntypoIcons color={MaterialColors.red[500]} name="video" size={IconSizes.x5} /> */}
+            </View>
+          </View>
+        </LinearGradient>
+        <LinearGradient
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          colors={ThemeStatic.commonSchema}
+          style={styles.linearGradient}>
+          <TouchableOpacity>
+            <Text style={styles.buttonText}>Đăng</Text>
+          </TouchableOpacity>
+        </LinearGradient>
       </View>
     </View>
   );
@@ -101,18 +149,11 @@ const style = (theme = {} as ThemeColors) =>
     container: {
       backgroundColor: theme.base,
       flex: 1,
+    },
+    header: {
       ...ifIphoneX({
         paddingTop: 44,
       }),
-    },
-    header: {
-      paddingTop: 50,
-      paddingHorizontal: 20,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      paddingBottom: 20,
-      backgroundColor: theme.base,
     },
     row: {
       flexDirection: 'row',
@@ -127,11 +168,11 @@ const style = (theme = {} as ThemeColors) =>
       borderRadius: 50,
     },
     input: {
-      // height: responsiveHeight(40),
+      height: 100,
       fontSize: 15,
+      color: theme.text01,
       // paddingVertical: 80,
       // paddingHorizontal: 80,
-      // backgroundColor: 'red',
     },
     text: {
       color: theme.text01,
@@ -166,14 +207,8 @@ const style = (theme = {} as ThemeColors) =>
       position: 'absolute',
       bottom: 0,
       marginHorizontal: 20,
-      borderColor: MaterialColors.grey[500],
-      borderWidth: 1,
       marginBottom: 40,
-      borderRadius: 10,
-      padding: 20,
       width: responsiveWidth(100) - 40,
-      justifyContent: 'space-between',
-      alignItems: 'center',
     },
     image: {
       flex: 1,
@@ -204,6 +239,21 @@ const style = (theme = {} as ThemeColors) =>
       left: 12,
       padding: 12,
       borderRadius: 5,
+    },
+    linearGradient: {
+      paddingLeft: 15,
+      paddingRight: 15,
+      borderRadius: 5,
+      width: '100%',
+      marginTop: 20,
+    },
+    buttonText: {
+      fontSize: 18,
+      fontFamily: 'Gill Sans',
+      textAlign: 'center',
+      margin: 10,
+      color: '#ffffff',
+      backgroundColor: 'transparent',
     },
   });
 
