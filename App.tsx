@@ -7,7 +7,9 @@ import { client } from './src/apollo/client';
 import RootApp from './src/RootApp';
 import RNBootSplash from 'react-native-bootsplash';
 import { RecoilRoot } from 'recoil';
-
+require('moment/locale/vi.js');
+import moment from 'moment';
+moment.locale('vi');
 const App = () => {
   const colorScheme = useColorScheme();
 

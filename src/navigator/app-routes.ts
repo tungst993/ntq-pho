@@ -27,4 +27,5 @@ export enum AppRoutes {
   WELCOME_SCREEN = 'WelcomeScreen',
   SEARCH_SCREEN = 'SearchScreen',
   CREATE_POST = 'CreatePost',
+  DETAIL_POST = 'DetailPost',
 }

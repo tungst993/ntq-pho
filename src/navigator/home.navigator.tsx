@@ -9,10 +9,12 @@ import type { MainTabParamList } from './app.navigator';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/home/home.screen';
 import CreatePostScreen from '../screens/home/container/createPost';
+import { DetailPost } from '../screens/home/DetailPost';
 
 export type HomeStackParamList = {
   [AppRoutes.HOME]: undefined;
   [AppRoutes.CREATE_POST]: undefined;
+  [AppRoutes.DETAIL_POST]: { id: string };
 };
 
 const Stack = createStackNavigator<HomeStackParamList>();
@@ -41,5 +43,6 @@ export const HomeNavigator = () => (
     mode="modal">
     <Stack.Screen name={AppRoutes.HOME} component={HomeScreen} />
     <Stack.Screen name={AppRoutes.CREATE_POST} component={CreatePostScreen} />
+    <Stack.Screen name={AppRoutes.DETAIL_POST} component={DetailPost} />
   </Stack.Navigator>
 );
