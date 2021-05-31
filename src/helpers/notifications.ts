@@ -50,6 +50,14 @@ export const showErrorNotification = (message: string) =>
     duration: 4000,
   });
 
+export const showSuccessNotification = (message: string) =>
+  showMessage({
+    message,
+    icon: 'success',
+    type: 'success',
+    duration: 3000,
+  });
+
 export const noAssetInfoNotification = () =>
   showMessage({
     message: 'Please pick an image before uploading',

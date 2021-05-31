@@ -1,5 +1,5 @@
-query myTinderProfile {
-  myTinderProfile {
+mutation updateTinderProfile($input: UpdateTinderProfileDto!) {
+  updateTinderProfile(input: $input) {
     id
     images
     gender

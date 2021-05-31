@@ -17,9 +17,11 @@ import LottieView from 'lottie-react-native';
 import { useFileUpload } from '../../../hooks/useFileUpload';
 import { useCreateTinderProfileMutation } from '../../../graphql/mutations/createTinderProfile.generated';
 import { somethingWentWrongErrorNotification } from '../../../helpers/notifications';
+import { useNavigation } from '@react-navigation/core';
 
 const NewUserProcess = () => {
   const [upload] = useFileUpload();
+  const { goBack } = useNavigation();
   const theme = useRecoilValue(themeState);
   const styles = useStyle(theme);
   const [step, setStep] = useState(1);
@@ -75,6 +77,8 @@ const NewUserProcess = () => {
   const handleback = () => {
     if (step > 1) {
       setStep(step - 1);
+    } else {
+      goBack();
     }
   };
 
@@ -155,14 +159,12 @@ const NewUserProcess = () => {
           style={[styles.gradientProgressbar, { width: `${(step / 4) * 100}%` }]}
         />
       </View>
-      {step > 1 && (
-        <MaterialIcons
-          onPress={handleback}
-          name="arrow-back-ios"
-          style={{ padding: 20, color: theme.text01 }}
-          size={IconSizes.x6}
-        />
-      )}
+      <MaterialIcons
+        onPress={handleback}
+        name="arrow-back-ios"
+        style={{ padding: 20, color: theme.text01 }}
+        size={IconSizes.x6}
+      />
       {step === 1 && (
         <View style={styles.contentContainer}>
           <Text style={styles.title}>Giới tính của tôi</Text>

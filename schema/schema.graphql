@@ -267,6 +267,7 @@ type TinderProfile implements Node {
   userId: Float!
   createdAt: DateTime!
   updatedAt: DateTime!
+  userInfo: User!
 }
 
 enum TinderGenderEnum {
@@ -342,6 +343,7 @@ type Mutation {
   """
   deleteGroup(id: Float!): Float!
   createTinderProfile(input: CreateTinderProfileDto!): TinderProfile!
+  updateTinderProfile(input: UpdateTinderProfileDto!): TinderProfile!
 }
 
 input UpdateUserInput {
@@ -414,6 +416,13 @@ input UpdateGroupDto {
 }
 
 input CreateTinderProfileDto {
+  images: [String!]!
+  gender: TinderGenderEnum!
+  target: TinderGenderEnum!
+  intro: String!
+}
+
+input UpdateTinderProfileDto {
   images: [String!]!
   gender: TinderGenderEnum!
   target: TinderGenderEnum!
