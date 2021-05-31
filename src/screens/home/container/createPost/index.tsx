@@ -1,8 +1,18 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-import { Text, Button, SafeAreaView, StyleSheet, View, ImageBackground, Image } from 'react-native';
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import {
+  Text,
+  Button,
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Pressable,
+  Image,
+  FlatList,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import type { Image as PickerImage } from 'react-native-image-crop-picker';
 
@@ -23,6 +33,8 @@ import { useFileUpload } from '../../../../hooks/useFileUpload';
 import { getImageFromLibrary } from '../../../../utils/shared';
 import { PostComponent } from '../../../../components/PostComponent';
 import ListImageDisplay from '../../../../components/shared/ListImageDisplay';
+import { Modalize } from 'react-native-modalize';
+import { VideoComponent } from '../../../../components/VideoComponent';
 
 const { FontWeights, FontSizes } = Typography;
 
@@ -31,123 +43,148 @@ const CreatePost = React.memo(() => {
   const user = useCurrentUser();
   const theme = useRecoilValue(themeState);
   const styles = style(theme);
-  const [selectedImage, setSelectedImage] = useState<PickerImage>();
-  const [editAvatar, setEditAvatar] = useState(user?.avatar ?? '');
   const [listImage, setListImage] = useState<Array<string>>([]);
+  const [videoPath, setVideoPath] = useState<string>();
 
-  const chooseImage = async () => {
-    const image = await getImageFromLibrary(120, 120, false);
-    if (image) {
-      setSelectedImage(image ?? ({} as Image));
-      setEditAvatar(image?.path ?? '');
-      setListImage([...listImage, image.path]);
+  console.log('list', listImage);
+
+  const modalizeRef = useRef<Modalize>(null);
+
+  const onOpen = () => {
+    modalizeRef.current?.open();
+  };
+
+  const chooseImage = async (type: 'photo' | 'video' | 'any' | undefined) => {
+    const file = await getImageFromLibrary(120, 120, false, type);
+    console.log('file', file);
+    if (file) {
+      if (type === 'photo') {
+        setListImage([...listImage, file.path]);
+      }
+
+      if (type === 'video') {
+        setVideoPath(file.path);
+      }
     }
   };
 
+  const removeImage = (uri: string) => {
+    setListImage([...listImage.filter((item) => item !== uri)]);
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <GoBackHeader
-          title="Tạo bài viết"
-          iconSize={IconSizes.x5}
-          IconRight={() => (
-            <TouchableOpacity onPress={goBack}>
-              <Text style={{ ...styles.text, fontWeight: 'bold' }}>Đăng</Text>
+    <>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <GoBackHeader
+            title="Tạo bài viết"
+            iconSize={IconSizes.x5}
+            IconRight={() => (
+              <TouchableOpacity onPress={goBack}>
+                <Text style={{ ...styles.text, fontWeight: 'bold' }}>Đăng</Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+        <View style={{ ...mainStyles.viewWrapper, marginTop: 10 }}>
+          <TextInput
+            multiline
+            numberOfLines={10}
+            style={{ ...styles.input }}
+            placeholder="Bạn đang nghĩ gì?"
+            placeholderTextColor={theme.text02}
+          />
+        </View>
+        <LinearGradient
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          colors={[theme.base, theme.base]}
+          style={{
+            height: 1,
+            marginHorizontal: 20,
+          }}
+        />
+        {listImage.length > 0 && !videoPath && (
+          <View>
+            <View style={styles.editImage}>
+              <TouchableOpacity hitSlop={{ top: 12, left: 12, right: 12, bottom: 12 }} onPress={onOpen}>
+                <Text style={{ fontWeight: 'bold' }}>Chỉnh sửa tất cả</Text>
+              </TouchableOpacity>
+            </View>
+            <ListImageDisplay dataImage={listImage} isClickImage={false} />
+          </View>
+        )}
+
+        {videoPath && <VideoComponent uri={videoPath} />}
+        <View style={styles.optionWrapper}>
+          {!videoPath && (
+            <TouchableOpacity style={styles.optionItem} onPress={() => chooseImage('photo')}>
+              <LinearGradient
+                start={{ x: 1, y: 1 }}
+                end={{ x: 1, y: 1 }}
+                colors={[MaterialColors.green[600], MaterialColors.green[500]]}
+                style={styles.iconWrapper}>
+                <Ionicons color={ThemeStatic.white} name="ios-images" size={IconSizes.x4} />
+              </LinearGradient>
+              <Text style={{ color: theme.text01, marginTop: 10 }}>Ảnh</Text>
             </TouchableOpacity>
           )}
-        />
-      </View>
-      <View style={{ ...mainStyles.viewWrapper, marginTop: 10 }}>
-        <TextInput
-          multiline
-          numberOfLines={10}
-          style={{ ...styles.input }}
-          placeholder="Bạn đang nghĩ gì?"
-          placeholderTextColor={theme.text02}
-        />
-      </View>
-      <LinearGradient
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        colors={[theme.base, theme.base]}
-        style={{
-          height: 1,
-          marginHorizontal: 20,
-        }}
-      />
-      {listImage.length > 0 && (
-        <View>
-          {/* <View style={styles.editImage}>
-            <TouchableOpacity hitSlop={{ top: 12, left: 12, right: 12, bottom: 12 }}>
-              <Text style={{ fontWeight: 'bold' }}>Chỉnh sửa tất cả</Text>
-            </TouchableOpacity>
-          </View> */}
-          <ListImageDisplay dataImage={listImage} />
-          {/* {listImage.map((item, index) => (
-            <View key={index}>
-              <NativeImage uri={item} style={styles.avatar} />
-            </View>
-          ))} */}
-        </View>
-      )}
-      <View style={styles.optionWrapper}>
-        <TouchableOpacity style={styles.optionItem} onPress={chooseImage}>
-          <Ionicons color={MaterialColors.green[500]} name="ios-images" size={IconSizes.x6} onPress={chooseImage} />
-          <Text style={{ color: theme.text02, marginTop: 10 }}>Ảnh/Video</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.optionItem}>
-          <Ionicons color={MaterialColors.orange[500]} name="md-stats-chart" size={IconSizes.x6} onPress={() => {}} />
-          <Text style={{ color: theme.text02, marginTop: 10 }}>Thăm dò ý kiến</Text>
-        </TouchableOpacity>
-      </View>
-      {/* <View style={{ ...styles.navBottom }}>
-        <LinearGradient
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          colors={ThemeStatic.commonSchema}
-          style={{ padding: 1, borderRadius: 10 }}>
-          <View
-            style={{
-              ...mainStyles.rowCenter,
-              justifyContent: 'space-between',
-              width: '100%',
-              borderColor: MaterialColors.grey[500],
-              padding: 20,
-              borderRadius: 10,
-              backgroundColor: theme.base,
-            }}>
-            <View>
-              <Text style={styles.textAddMore}>Thêm vào bài viết</Text>
-            </View>
-            <View style={{ ...styles.row }}>
-              <Ionicons
-                color={MaterialColors.green[500]}
-                style={{ marginRight: 20 }}
-                name="ios-images"
-                size={IconSizes.x6}
-                onPress={chooseImage}
-              />
 
-              <Ionicons
-                color={MaterialColors.orange[500]}
-                name="md-stats-chart"
-                size={IconSizes.x6}
-                onPress={() => {}}
-              />
-            </View>
-          </View>
-        </LinearGradient>
-        <LinearGradient
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          colors={ThemeStatic.commonSchema}
-          style={styles.linearGradient}>
-          <TouchableOpacity>
-            <Text style={styles.buttonText}>Đăng</Text>
+          {!(listImage.length > 0) && (
+            <TouchableOpacity style={styles.optionItem} onPress={() => chooseImage('video')}>
+              <LinearGradient
+                start={{ x: 1, y: 1 }}
+                end={{ x: 1, y: 1 }}
+                colors={[MaterialColors.purple[600], MaterialColors.purple[500]]}
+                style={styles.iconWrapper}>
+                <Ionicons color={ThemeStatic.white} name="videocam" size={IconSizes.x4} />
+              </LinearGradient>
+              <Text style={{ color: theme.text01, marginTop: 10 }}>Video</Text>
+            </TouchableOpacity>
+          )}
+
+          <TouchableOpacity style={styles.optionItem}>
+            <LinearGradient
+              start={{ x: 1, y: 1 }}
+              end={{ x: 1, y: 1 }}
+              colors={[MaterialColors.orange[600], MaterialColors.orange[500]]}
+              style={styles.iconWrapper}>
+              <Ionicons color={ThemeStatic.white} name="md-stats-chart" size={IconSizes.x4} onPress={() => {}} />
+            </LinearGradient>
+            <Text style={{ color: theme.text01, marginTop: 10 }}>Thăm dò ý kiến</Text>
           </TouchableOpacity>
-        </LinearGradient>
-      </View> */}
-    </View>
+        </View>
+      </View>
+      <View>
+        <Modalize ref={modalizeRef} adjustToContentHeight={false} modalStyle={styles.viewAllImage}>
+          <FlatList
+            data={listImage}
+            style={{ paddingTop: 24 }}
+            renderItem={(item) => (
+              <LinearGradient
+                start={{ x: 1, y: 0 }}
+                end={{ x: 0, y: 1 }}
+                colors={[MaterialColors.grey[600], MaterialColors.grey[500]]}
+                style={styles.viewImageWrapper}>
+                <View style={styles.removeImage}>
+                  <TouchableOpacity style={{ width: 40, height: 40 }} onPress={() => removeImage(item.item)}>
+                    <LinearGradient
+                      start={{ x: 1, y: 1 }}
+                      end={{ x: 1, y: 1 }}
+                      colors={[MaterialColors.grey[100], MaterialColors.grey[600]]}
+                      style={styles.iconWrapper}>
+                      <Ionicons color={ThemeStatic.black} name="close" size={IconSizes.x4} />
+                    </LinearGradient>
+                  </TouchableOpacity>
+                </View>
+
+                <NativeImage style={{ height: responsiveHeight(20) }} uri={item.item} />
+              </LinearGradient>
+            )}
+          />
+        </Modalize>
+      </View>
+    </>
   );
 });
 
@@ -269,13 +306,42 @@ const style = (theme = {} as ThemeColors) =>
       flexDirection: 'row',
       paddingHorizontal: 20,
       justifyContent: 'space-between',
-      marginTop: 20,
+      flexWrap: 'wrap',
     },
     optionItem: {
       width: (responsiveWidth(100) - 60) / 2,
       backgroundColor: theme.base,
-      borderRadius: 10,
-      padding: 20,
+      borderRadius: 8,
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      marginTop: 20,
+    },
+    iconWrapper: {
+      width: 30,
+      height: 30,
+      borderRadius: 15,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    viewAllImage: {
+      paddingHorizontal: 20,
+      backgroundColor: theme.base,
+    },
+    viewImageWrapper: {
+      paddingHorizontal: responsiveWidth(20),
+      backgroundColor: MaterialColors.grey[600],
+      borderRadius: 20,
+      position: 'relative',
+      marginBottom: 20,
+    },
+    removeImage: {
+      position: 'absolute',
+      width: 40,
+      height: 40,
+      marginBottom: 10,
+      right: 0,
+      top: 10,
     },
   });
 

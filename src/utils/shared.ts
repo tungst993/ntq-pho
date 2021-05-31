@@ -8,20 +8,32 @@ import { MediaType, Message } from '../graphql/type.interface';
 import type { IMessage } from 'react-native-gifted-chat';
 import moment from 'moment';
 
-export const getImageFromLibrary = async (height: number, width: number, circular: boolean = false) => {
-  const options: Options = {
-    height,
-    width,
-    cropperCircleOverlay: circular,
-    cropping: true,
-    cropperActiveWidgetColor: ThemeStatic.accent,
-    cropperStatusBarColor: ThemeStatic.accent,
-    cropperToolbarColor: ThemeStatic.accent,
-    compressImageQuality: 1,
-    mediaType: 'photo',
-    writeTempFile: true,
-    multiple: false,
-  };
+export const getImageFromLibrary = async (
+  height: number,
+  width: number,
+  circular: boolean = false,
+  mediaType: 'photo' | 'video' | 'any' | undefined = 'photo',
+) => {
+  const options: Options =
+    mediaType === 'video'
+      ? {
+          mediaType,
+          writeTempFile: true,
+          multiple: false,
+        }
+      : {
+          height,
+          width,
+          cropperCircleOverlay: circular,
+          cropping: true,
+          cropperActiveWidgetColor: ThemeStatic.accent,
+          cropperStatusBarColor: ThemeStatic.accent,
+          cropperToolbarColor: ThemeStatic.accent,
+          compressImageQuality: 1,
+          mediaType,
+          writeTempFile: true,
+          multiple: false,
+        };
 
   try {
     const assetData = await ImagePicker.openPicker(options);
@@ -107,7 +119,7 @@ export const convertToNormalVideoUri = (media: PhotoIdentifier): string => {
 };
 
 export const isUserOnline = (lastSeen: number) => {
-  return moment().subtract(Timeouts.online, "seconds").isBefore(moment(lastSeen));
+  return moment().subtract(Timeouts.online, 'seconds').isBefore(moment(lastSeen));
 };
 
 export const filterChatParticipants = (userId: number, participants: any[]) =>
@@ -142,12 +154,12 @@ export const transformMessages = (messages: Message[] | any) =>
       media,
       mediaType,
       sent,
-      received
+      received,
     } = message;
 
     const convertMessage: IMessage = {
       _id: id,
-      text: content ?? "",
+      text: content ?? '',
       createdAt,
       sent,
       received,

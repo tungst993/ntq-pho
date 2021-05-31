@@ -10,6 +10,7 @@ import NativeImage from './NativeImage';
 
 interface ListImageDisplayProps {
   dataImage?: Array<string>;
+  isClickImage?: boolean;
 }
 
 const data = [
@@ -20,7 +21,7 @@ const data = [
   'https://sohanews.sohacdn.com/2020/2/26/photo-1-158270587240769675748.jpg',
 ];
 
-const ListImageDisplay = React.memo<ListImageDisplayProps>(({ dataImage = data }) => {
+const ListImageDisplay = React.memo<ListImageDisplayProps>(({ dataImage = data, isClickImage = true }) => {
   const theme = useRecoilValue(themeState);
   const style = styles(theme);
   console.log('data', data);
@@ -28,7 +29,7 @@ const ListImageDisplay = React.memo<ListImageDisplayProps>(({ dataImage = data }
   const ImageArea = () => {
     if (dataImage.length === 1) {
       return (
-        <TouchableOpacity>
+        <TouchableOpacity activeOpacity={isClickImage ? 0 : 1}>
           <NativeImage uri={dataImage[0]} style={style.image1} />
         </TouchableOpacity>
       );
@@ -36,10 +37,10 @@ const ListImageDisplay = React.memo<ListImageDisplayProps>(({ dataImage = data }
       return (
         <>
           <View style={style.rowHorizontal}>
-            <TouchableOpacity>
+            <TouchableOpacity activeOpacity={isClickImage ? 0 : 1}>
               <NativeImage uri={dataImage[0]} style={style.image2} />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity activeOpacity={isClickImage ? 0 : 1}>
               <NativeImage uri={dataImage[1]} style={style.image2} />
             </TouchableOpacity>
           </View>
@@ -48,14 +49,14 @@ const ListImageDisplay = React.memo<ListImageDisplayProps>(({ dataImage = data }
     } else if (dataImage.length === 3) {
       return (
         <View style={style.rowHorizontal}>
-          <TouchableOpacity>
+          <TouchableOpacity activeOpacity={isClickImage ? 0 : 1}>
             <NativeImage uri={dataImage[0]} style={style.image2} />
           </TouchableOpacity>
           <View style={style.column}>
-            <TouchableOpacity style={style.viewImage3}>
+            <TouchableOpacity activeOpacity={isClickImage ? 0 : 1} style={style.viewImage3}>
               <NativeImage uri={dataImage[1]} style={style.image3} />
             </TouchableOpacity>
-            <TouchableOpacity style={style.viewImage3}>
+            <TouchableOpacity activeOpacity={isClickImage ? 0 : 1} style={style.viewImage3}>
               <NativeImage uri={dataImage[2]} style={style.image3} />
             </TouchableOpacity>
           </View>
@@ -65,18 +66,18 @@ const ListImageDisplay = React.memo<ListImageDisplayProps>(({ dataImage = data }
       return (
         <View style={style.rowHorizontal}>
           <View style={style.column}>
-            <TouchableOpacity style={style.viewImage3}>
+            <TouchableOpacity activeOpacity={isClickImage ? 0 : 1} style={style.viewImage3}>
               <NativeImage uri={dataImage[0]} style={style.image3} />
             </TouchableOpacity>
-            <TouchableOpacity style={style.viewImage3}>
+            <TouchableOpacity activeOpacity={isClickImage ? 0 : 1} style={style.viewImage3}>
               <NativeImage uri={dataImage[1]} style={style.image3} />
             </TouchableOpacity>
           </View>
           <View style={style.column}>
-            <TouchableOpacity style={style.viewImage3}>
+            <TouchableOpacity activeOpacity={isClickImage ? 0 : 1} style={style.viewImage3}>
               <NativeImage uri={dataImage[2]} style={style.image3} />
             </TouchableOpacity>
-            <TouchableOpacity style={style.viewImage3}>
+            <TouchableOpacity activeOpacity={isClickImage ? 0 : 1} style={style.viewImage3}>
               <NativeImage uri={dataImage[3]} style={style.image3} />
             </TouchableOpacity>
           </View>
@@ -86,18 +87,18 @@ const ListImageDisplay = React.memo<ListImageDisplayProps>(({ dataImage = data }
       return (
         <View style={style.rowHorizontal}>
           <View style={style.column}>
-            <TouchableOpacity style={style.viewImage3}>
+            <TouchableOpacity activeOpacity={isClickImage ? 0 : 1} style={style.viewImage3}>
               <NativeImage uri={dataImage[0]} style={[style.image3]} />
             </TouchableOpacity>
-            <TouchableOpacity style={style.viewImage3}>
+            <TouchableOpacity activeOpacity={isClickImage ? 0 : 1} style={style.viewImage3}>
               <NativeImage uri={dataImage[1]} style={style.image3} />
             </TouchableOpacity>
           </View>
           <View style={style.column}>
-            <TouchableOpacity style={style.viewImage3}>
+            <TouchableOpacity activeOpacity={isClickImage ? 0 : 1} style={style.viewImage3}>
               <NativeImage uri={dataImage[2]} style={style.image3} />
             </TouchableOpacity>
-            <TouchableOpacity style={style.viewImage3}>
+            <TouchableOpacity activeOpacity={isClickImage ? 0 : 1} style={style.viewImage3}>
               <NativeImage uri={dataImage[3]} style={[style.image3]} />
               <View
                 style={[
@@ -168,7 +169,7 @@ const styles = (theme = {} as ThemeColors) =>
     },
     viewImage3: {
       width: responsiveWidth(49.5),
-      height: '49.5%',
+      height: 290 / 2 - 2,
     },
     column: {
       flexDirection: 'column',
