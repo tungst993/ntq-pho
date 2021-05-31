@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prettier/prettier */
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
@@ -13,22 +14,25 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import ImageView from 'react-native-image-view';
 import LottieView from 'lottie-react-native';
 
-interface PostProps {}
-export const PostComponent = (props: PostProps) => {
+interface PostProps {
+  dataImage?: Array<string>;
+}
+
+const data =  [
+  'https://uploads-ssl.webflow.com/5f5f2b58b1af780151375838/606916bf1e21c70142eb887a_GaiHot2k__anh-gai-xinh-de-thuong-viet-nam%252B%2525282%252529.jpeg',
+  'https://anhgaixinh.top/wp-content/uploads/2021/01/top-10-gai-xinh-viet-nam-tren-mang-nam-2021-cuc-pham-mi-nhan-thien-ha-0.jpg',
+  'http://diembaoaz.com/wp-content/uploads/2018/11/anh-girl-xinh-9-1.jpg',
+  'https://stpeterline.com/documents/814359/0/gai-xinh-1.jpg/b71f793b-ef66-4f68-b736-99ece5211644?t=1615518347250',
+  'https://sohanews.sohacdn.com/2020/2/26/photo-1-158270587240769675748.jpg',
+];
+export const PostComponent = React.memo<PostProps>(({dataImage = data}) => {
   const theme = useRecoilValue(themeState);
   const style = styles(theme);
   const [like, setLike] = useState(false);
   const [visible, setVisible] = useState(false);
   const [listImageFull, setListImageFull] = useState<Array<any>>([]);
   const [indexImage, setIndexImage] = useState(0);
-  let {} = props;
-  const dataImage = [
-    'https://uploads-ssl.webflow.com/5f5f2b58b1af780151375838/606916bf1e21c70142eb887a_GaiHot2k__anh-gai-xinh-de-thuong-viet-nam%252B%2525282%252529.jpeg',
-    'https://anhgaixinh.top/wp-content/uploads/2021/01/top-10-gai-xinh-viet-nam-tren-mang-nam-2021-cuc-pham-mi-nhan-thien-ha-0.jpg',
-    'http://diembaoaz.com/wp-content/uploads/2018/11/anh-girl-xinh-9-1.jpg',
-    'https://stpeterline.com/documents/814359/0/gai-xinh-1.jpg/b71f793b-ef66-4f68-b736-99ece5211644?t=1615518347250',
-    'https://sohanews.sohacdn.com/2020/2/26/photo-1-158270587240769675748.jpg',
-  ];
+
   useEffect(() => {
     const arr: Array<any> = [];
     dataImage.map((i) => {
@@ -36,7 +40,8 @@ export const PostComponent = (props: PostProps) => {
       arr.push(obj);
     });
     setListImageFull(arr);
-  }, []);
+  }, [dataImage]);
+
   const ImageArea = () => {
     if (dataImage.length === 1) {
       return (
@@ -273,7 +278,8 @@ export const PostComponent = (props: PostProps) => {
       <ImageView onClose={() => setVisible(false)} images={listImageFull} imageIndex={indexImage} isVisible={visible} />
     </View>
   );
-};
+});
+
 const styles = (theme = {} as ThemeColors) =>
   StyleSheet.create({
     container: {

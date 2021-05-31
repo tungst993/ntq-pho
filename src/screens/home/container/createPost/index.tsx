@@ -21,6 +21,8 @@ import GoBackHeader from '../../../../components/shared/layout/headers/GoBackHea
 import { ifIphoneX } from 'react-native-iphone-x-helper';
 import { useFileUpload } from '../../../../hooks/useFileUpload';
 import { getImageFromLibrary } from '../../../../utils/shared';
+import { PostComponent } from '../../../../components/PostComponent';
+import ListImageDisplay from '../../../../components/shared/ListImageDisplay';
 
 const { FontWeights, FontSizes } = Typography;
 
@@ -44,11 +46,7 @@ const CreatePost = React.memo(() => {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        colors={ThemeStatic.commonSchema}
-        style={styles.header}>
+      <View style={styles.header}>
         <GoBackHeader
           title="Tạo bài viết"
           iconSize={IconSizes.x5}
@@ -58,8 +56,8 @@ const CreatePost = React.memo(() => {
             </TouchableOpacity>
           )}
         />
-      </LinearGradient>
-      <View style={{ ...mainStyles.viewWrapper, marginTop: 40 }}>
+      </View>
+      <View style={{ ...mainStyles.viewWrapper, marginTop: 10 }}>
         <TextInput
           multiline
           numberOfLines={10}
@@ -71,28 +69,38 @@ const CreatePost = React.memo(() => {
       <LinearGradient
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
-        colors={ThemeStatic.commonSchema}
+        colors={[theme.base, theme.base]}
         style={{
           height: 1,
           marginHorizontal: 20,
         }}
       />
       {listImage.length > 0 && (
-        <View style={styles.listImageWrapper}>
-          <View style={styles.editImage}>
+        <View>
+          {/* <View style={styles.editImage}>
             <TouchableOpacity hitSlop={{ top: 12, left: 12, right: 12, bottom: 12 }}>
               <Text style={{ fontWeight: 'bold' }}>Chỉnh sửa tất cả</Text>
             </TouchableOpacity>
-          </View>
-
-          {listImage.map((item, index) => (
+          </View> */}
+          <ListImageDisplay dataImage={listImage} />
+          {/* {listImage.map((item, index) => (
             <View key={index}>
               <NativeImage uri={item} style={styles.avatar} />
             </View>
-          ))}
+          ))} */}
         </View>
       )}
-      <View style={{ ...styles.navBottom }}>
+      <View style={styles.optionWrapper}>
+        <TouchableOpacity style={styles.optionItem} onPress={chooseImage}>
+          <Ionicons color={MaterialColors.green[500]} name="ios-images" size={IconSizes.x6} onPress={chooseImage} />
+          <Text style={{ color: theme.text02, marginTop: 10 }}>Ảnh/Video</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.optionItem}>
+          <Ionicons color={MaterialColors.orange[500]} name="md-stats-chart" size={IconSizes.x6} onPress={() => {}} />
+          <Text style={{ color: theme.text02, marginTop: 10 }}>Thăm dò ý kiến</Text>
+        </TouchableOpacity>
+      </View>
+      {/* <View style={{ ...styles.navBottom }}>
         <LinearGradient
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
@@ -126,7 +134,6 @@ const CreatePost = React.memo(() => {
                 size={IconSizes.x6}
                 onPress={() => {}}
               />
-              {/* <EntypoIcons color={MaterialColors.red[500]} name="video" size={IconSizes.x5} /> */}
             </View>
           </View>
         </LinearGradient>
@@ -139,7 +146,7 @@ const CreatePost = React.memo(() => {
             <Text style={styles.buttonText}>Đăng</Text>
           </TouchableOpacity>
         </LinearGradient>
-      </View>
+      </View> */}
     </View>
   );
 });
@@ -147,13 +154,16 @@ const CreatePost = React.memo(() => {
 const style = (theme = {} as ThemeColors) =>
   StyleSheet.create({
     container: {
-      backgroundColor: theme.base,
+      backgroundColor: theme.secondary,
       flex: 1,
     },
     header: {
       ...ifIphoneX({
         paddingTop: 44,
+        paddingBottom: 10,
       }),
+      borderBottomColor: theme.base,
+      borderBottomWidth: 1,
     },
     row: {
       flexDirection: 'row',
@@ -168,11 +178,11 @@ const style = (theme = {} as ThemeColors) =>
       borderRadius: 50,
     },
     input: {
-      height: 100,
+      minHeight: 100,
+      maxHeight: 500,
       fontSize: 15,
       color: theme.text01,
-      // paddingVertical: 80,
-      // paddingHorizontal: 80,
+      paddingVertical: 10,
     },
     text: {
       color: theme.text01,
@@ -254,6 +264,18 @@ const style = (theme = {} as ThemeColors) =>
       margin: 10,
       color: '#ffffff',
       backgroundColor: 'transparent',
+    },
+    optionWrapper: {
+      flexDirection: 'row',
+      paddingHorizontal: 20,
+      justifyContent: 'space-between',
+      marginTop: 20,
+    },
+    optionItem: {
+      width: (responsiveWidth(100) - 60) / 2,
+      backgroundColor: theme.base,
+      borderRadius: 10,
+      padding: 20,
     },
   });
 

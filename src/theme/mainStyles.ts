@@ -10,6 +10,9 @@ export const mainStyles = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
+  col: {
+    flexDirection: 'column',
+  },
   rowCenter: {
     flexDirection: 'row',
     alignItems: 'center',
