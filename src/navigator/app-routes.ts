@@ -7,6 +7,7 @@ export enum AppRoutes {
   HOME = 'Home',
   TINDER_NAVIGATOR = 'TinderNavigator',
   TINDER_APP = 'TinderApp',
+  TINDER_APP_SCREEN = 'TinderAppScreen',
   TINDER_PROFILE = 'TinderProfile',
   TINDER_MESSAGE = 'TinderMessages',
   TINDER_CONVERSATION = 'TinderConversation',

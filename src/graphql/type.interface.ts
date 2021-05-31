@@ -301,6 +301,7 @@ export type TinderProfile = Node & {
   userId: Scalars['Float'];
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
+  userInfo: User;
 };
 
 export enum TinderGenderEnum {
@@ -452,6 +453,7 @@ export type Mutation = {
   /** Return id nhóm vừa xoá */
   deleteGroup: Scalars['Float'];
   createTinderProfile: TinderProfile;
+  updateTinderProfile: TinderProfile;
 };
 
 export type MutationUpdateUserInfoArgs = {
@@ -547,6 +549,10 @@ export type MutationCreateTinderProfileArgs = {
   input: CreateTinderProfileDto;
 };
 
+export type MutationUpdateTinderProfileArgs = {
+  input: UpdateTinderProfileDto;
+};
+
 export type UpdateUserInput = {
   avatar?: Maybe<Scalars['String']>;
   intro?: Maybe<Scalars['String']>;
@@ -612,6 +618,13 @@ export type UpdateGroupDto = {
 };
 
 export type CreateTinderProfileDto = {
+  images: Array<Scalars['String']>;
+  gender: TinderGenderEnum;
+  target: TinderGenderEnum;
+  intro: Scalars['String'];
+};
+
+export type UpdateTinderProfileDto = {
   images: Array<Scalars['String']>;
   gender: TinderGenderEnum;
   target: TinderGenderEnum;

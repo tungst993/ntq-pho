@@ -8,7 +8,25 @@ export type MyTinderProfileQueryResponse = { __typename?: 'Query' } & {
   myTinderProfile: { __typename?: 'TinderProfile' } & Pick<
     Types.TinderProfile,
     'id' | 'images' | 'gender' | 'target' | 'intro' | 'userId' | 'createdAt' | 'updatedAt'
-  >;
+  > & {
+      userInfo: { __typename?: 'User' } & Pick<
+        Types.User,
+        | 'id'
+        | 'firstName'
+        | 'lastName'
+        | 'fullName'
+        | 'nickname'
+        | 'intro'
+        | 'googleId'
+        | 'avatar'
+        | 'isNew'
+        | 'lastSeen'
+        | 'department'
+        | 'position'
+        | 'createdAt'
+        | 'updatedAt'
+      >;
+    };
 };
 
 export const MyTinderProfileDocument = gql`
@@ -22,6 +40,22 @@ export const MyTinderProfileDocument = gql`
       userId
       createdAt
       updatedAt
+      userInfo {
+        id
+        firstName
+        lastName
+        fullName
+        nickname
+        intro
+        googleId
+        avatar
+        isNew
+        lastSeen
+        department
+        position
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
