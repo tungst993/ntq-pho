@@ -227,8 +227,12 @@ PODS:
   - react-native-nodemediaclient/RCTNodeMediaClient (0.2.15):
     - NodeMediaClient (= 2.9.4)
     - React
+  - react-native-orientation (3.1.3):
+    - React
   - react-native-safe-area-context (3.1.9):
     - React-Core
+  - react-native-slider (3.0.3):
+    - React
   - react-native-video (5.1.1):
     - React-Core
     - react-native-video/Video (= 5.1.1)
@@ -373,7 +377,9 @@ DEPENDENCIES:
   - "react-native-cameraroll (from `../node_modules/@react-native-community/cameraroll`)"
   - react-native-image-filter-kit (from `../node_modules/react-native-image-filter-kit`)
   - react-native-nodemediaclient (from `../node_modules/react-native-nodemediaclient`)
+  - react-native-orientation (from `../node_modules/react-native-orientation`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - react-native-video (from `../node_modules/react-native-video`)
   - react-native-zalo-kit (from `../node_modules/react-native-zalo-kit`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -459,8 +465,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-filter-kit"
   react-native-nodemediaclient:
     :path: "../node_modules/react-native-nodemediaclient"
+  react-native-orientation:
+    :path: "../node_modules/react-native-orientation"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-slider:
+    :path: "../node_modules/@react-native-community/slider"
   react-native-video:
     :path: "../node_modules/react-native-video"
   react-native-zalo-kit:
@@ -544,7 +554,9 @@ SPEC CHECKSUMS:
   react-native-cameraroll: 1965db75c851b15e77a22ca0ac78e32af6b571ae
   react-native-image-filter-kit: 2513a9f5d67d35aa7b72a7a31e2123d7b1b3cf33
   react-native-nodemediaclient: 6edfb967a99ae8229c96f02316a3ab91b50267ec
+  react-native-orientation: f1caf84d65f1a4fd4511a18f2b924e634ad7a628
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
+  react-native-slider: e99fc201cefe81270fc9d81714a7a0f5e566b168
   react-native-video: 0bb76b6d6b77da3009611586c7dbf817b947f30e
   react-native-zalo-kit: 96847dbe1a3b8f855be5715ef9bada72b22b88d6
   React-RCTActionSheet: 53ea72699698b0b47a6421cb1c8b4ab215a774aa

@@ -1,13 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Button, FlatList } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Button, FlatList, ScrollView } from 'react-native';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
+import Video from 'react-native-video';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import PostCardPlaceholder from '../../components/placeholders/PostCard.Placeholder';
-import UserRowPlaceholder from '../../components/placeholders/UserRow.Placeholder';
-import SearchUsersPlaceholder from '../../components/placeholders/UserSearch.Placeholder';
+import PostViewScreenPlaceholder from '../../components/placeholders/PostViewScreen.Placeholder';
 import { PostComponent } from '../../components/PostComponent';
 import NativeImage from '../../components/shared/NativeImage';
+import { VideoComponent } from '../../components/VideoComponent';
 import { useCurrentUser } from '../../hooks/useCurrentUser';
 import { AppRoutes } from '../../navigator/app-routes';
 import { isLoginState } from '../../recoil/auth/atoms';
@@ -29,10 +29,10 @@ const Home = React.memo(() => {
           <Text style={{ color: theme.text02 }}>Bạn đang nghĩ gì?</Text>
         </TouchableOpacity>
       </View>
-
-      <View style={{ flex: 1 }}>
+      {/* <PostViewScreenPlaceholder /> */}
+      <ScrollView style={{}}>
         <FlatList data={[1]} renderItem={() => <PostComponent />} keyExtractor={(index) => index.toString()} />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 });
@@ -57,6 +57,7 @@ const styles = (theme = {} as ThemeColors) =>
       paddingHorizontal: 20,
       backgroundColor: theme.base,
       marginBottom: 10,
+      paddingBottom: 10,
     },
     input: {
       height: 40,
