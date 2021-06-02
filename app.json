@@ -1,7 +1,7 @@
 {
   "name": "DemoApp",
   "displayName": "DemoApp",
-  "API_URL": "http://9792ea687f06.ngrok.io/graphql",
-  "WS_URL": "http://9792ea687f06.ngrok.io/graphql",
-  "UPLOAD_URL": "http://9792ea687f06.ngrok.io/api/v1/media/upload"
+  "API_URL": "http://f136c548b71d.ngrok.io/graphql",
+  "WS_URL": "http://f136c548b71d.ngrok.io/graphql",
+  "UPLOAD_URL": "http://f136c548b71d.ngrok.io/api/v1/media/upload"
 }

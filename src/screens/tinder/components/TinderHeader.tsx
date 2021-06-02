@@ -27,7 +27,7 @@ const TinderHeader: React.FC<TinderHeaderProps> = ({ onChangetab, tab }) => {
           <FontAwesome
             name="user"
             style={{ fontSize: 20 }}
-            color={tab === AppRoutes.TINDER_PROFILE ? ThemeStatic.tinder : theme.white}
+            color={tab === AppRoutes.TINDER_PROFILE ? ThemeStatic.tinder : theme.text02}
           />
         )}
       />
@@ -39,7 +39,7 @@ const TinderHeader: React.FC<TinderHeaderProps> = ({ onChangetab, tab }) => {
           <Ionicons
             name="heart"
             style={{ fontSize: 20 }}
-            color={tab === AppRoutes.TINDER_APP_SCREEN ? ThemeStatic.tinder : theme.white}
+            color={tab === AppRoutes.TINDER_APP_SCREEN ? ThemeStatic.tinder : theme.text02}
           />
         )}
       />
@@ -52,7 +52,7 @@ const TinderHeader: React.FC<TinderHeaderProps> = ({ onChangetab, tab }) => {
           <Feather
             name="message-circle"
             style={{ fontSize: 20 }}
-            color={tab === AppRoutes.TINDER_MESSAGE ? ThemeStatic.tinder : theme.white}
+            color={tab === AppRoutes.TINDER_MESSAGE ? ThemeStatic.tinder : theme.text02}
           />
         )}
       />
