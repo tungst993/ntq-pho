@@ -8,7 +8,7 @@ import type { RootStackParamList } from './root.navigator';
 import type { MainTabParamList } from './app.navigator';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/home/home.screen';
-import CreatePostScreen from '../screens/home/container/createPost';
+import CreatePostScreen from '../screens/home/createPost';
 import { DetailPost } from '../screens/home/DetailPost';
 
 export type HomeStackParamList = {
@@ -39,6 +39,7 @@ export const HomeNavigator = () => (
   <Stack.Navigator
     screenOptions={{
       headerShown: false,
+      gestureEnabled: false,
     }}
     mode="modal">
     <Stack.Screen name={AppRoutes.HOME} component={HomeScreen} />

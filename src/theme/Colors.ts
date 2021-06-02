@@ -61,6 +61,7 @@ export const Theme: {
       white: '#FFFFFF',
       shadow: '#000',
       modal: 'rgba(0,0,0, 0.5)',
+      divider: '#232526',
     },
   },
   dark: {
@@ -76,6 +77,7 @@ export const Theme: {
       white: '#FFFFFF',
       shadow: '#fff',
       modal: 'rgba(255,255,255, 0.5)',
+      divider: '#232526',
     },
   },
 };
