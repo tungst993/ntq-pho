@@ -5,6 +5,7 @@ import {
   Image,
   Keyboard,
   PermissionsAndroid,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -318,7 +319,7 @@ const ConversationScreen: React.FC = () => {
         )}
         titleStyle={styles().headerTitleStyle}
         notSpaceBetween
-        // subTitle={isUserOnline(data?.getUserInfo?.lastSeen) ? 'Active' : moment(data?.getUserInfo?.lastSeen).fromNow()}
+      // subTitle={isUserOnline(data?.getUserInfo?.lastSeen) ? 'Active' : moment(data?.getUserInfo?.lastSeen).fromNow()}
       />
       {/* {init && chatQueryLoading ? <ConversationScreenPlaceholder /> : null} */}
       <GiftedChat

@@ -31,3 +31,13 @@ export const PollIntervals: PollIntervalsType = {
 export const Timeouts = {
   online: 30,
 };
+
+export const numberReaction = (reaction: number) => {
+  if (reaction > 1000000) {
+    return `${(reaction / 1000000).toFixed(1)}M`;
+  } else if (reaction > 1000) {
+    return `${(reaction / 1000).toFixed(1)}K`;
+  } else {
+    return `${reaction}`;
+  }
+};

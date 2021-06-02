@@ -16,6 +16,7 @@ import LottieView from 'lottie-react-native';
 import { VideoComponent } from '../VideoComponent';
 import { useNavigation } from '@react-navigation/core';
 import { AppRoutes } from '../../navigator/app-routes';
+import { numberReaction } from '../../utils/constants';
 
 interface PostProps {
   dataImage?: Array<string>;
@@ -204,21 +205,13 @@ export const PostComponent = React.memo<PostProps>(({ dataImage = data }) => {
       );
     }
   };
-  const numberReaction = (reaction: number) => {
-    if (reaction > 1000000) {
-      return `${(reaction / 1000000).toFixed(1)}M`;
-    } else if (reaction > 1000) {
-      return `${(reaction / 1000).toFixed(1)}K`;
-    } else {
-      return `${reaction}`;
-    }
-  };
+
   const onComment = () => {
     navigation.navigate(AppRoutes.DETAIL_POST);
   };
   return (
     <View style={style.container}>
-      <View style={{ ...style.row, ...style.paddingHorizontal20 }}>
+      <Pressable onPress={onComment} style={{ ...style.row, ...style.paddingHorizontal20 }}>
         <NativeImage
           resizeMode={'contain'}
           uri={
@@ -230,17 +223,17 @@ export const PostComponent = React.memo<PostProps>(({ dataImage = data }) => {
           <Text style={style.textUserName}>Username</Text>
           <Text style={style.textTime}>{moment().fromNow()}</Text>
         </View>
-      </View>
+      </Pressable>
       <Pressable onPress={() => setShowmore(!showMore)}>
         <Text numberOfLines={showMore ? undefined : 2} style={[style.textContent, style.paddingHorizontal20]}>Như một thói quen, cứ thứ 2 đầu tuần, các thành viên lại cùng nhau khoác lên mình chiếc áo đồng phục lan tỏa niềm tự hào và chất riêng của người NTQ. Ngày hôm nay, các bạn hãy mặc áo đồng phục của công ty (dù có đến công ty hay làm việc ở nhà) và đừng quên chụp ảnh lại để khoe với mọi người nha!!</Text>
       </Pressable>
       {/* {ImageArea()} */}
       <VideoComponent uri={'https://assets.mixkit.co/videos/download/mixkit-countryside-meadow-4075.mp4'} />
 
-      <View style={[style.rowHorizontal, style.paddingHorizontal20, { marginVertical: 12 }]}>
+      <Pressable onPress={onComment} style={[style.rowHorizontal, style.paddingHorizontal20, { marginVertical: 12 }]}>
         <View style={style.row}>
           <LinearGradient
-            colors={['rgba(50,120,242, 0.9)', 'rgba(50,120,242, 0.7)', 'rgba(50,120,242, 0.5)']}
+            colors={['#35a3fa', '#2e6ee3']}
             style={{
               padding: 6,
               width: 24,
@@ -255,7 +248,7 @@ export const PostComponent = React.memo<PostProps>(({ dataImage = data }) => {
           <Text style={style.textReaction}>{numberReaction(100)}</Text>
         </View>
         <Text style={style.textReaction}>{numberReaction(20)} bình luận</Text>
-      </View>
+      </Pressable>
       <View style={[style.rowHorizontal, style.paddingHorizontal20, style.border, { justifyContent: 'space-around' }]}>
         <TouchableOpacity
           hitSlop={{ top: 10, bottom: 10, left: 50, right: 50 }}
@@ -313,7 +306,7 @@ const styles = (theme = {} as ThemeColors) =>
     textUserName: {
       color: theme.text01,
       fontSize: 14,
-      fontWeight: 'bold',
+      fontWeight: '600',
     },
     textTime: {
       fontSize: 12,

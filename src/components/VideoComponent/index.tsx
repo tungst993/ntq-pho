@@ -2,7 +2,8 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, TouchableWithoutFeedback, StatusBar, StyleSheet } from 'react-native';
-import Slider from '@react-native-community/slider';
+// import Slider from '@react-native-community/slider';
+import Slider from 'react-native-slider';
 import Video from 'react-native-video';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useRecoilValue } from 'recoil';
@@ -106,7 +107,6 @@ export const VideoComponent = (props: VideoProps) => {
     const _renderVideo = () => {
         return (
             <Video
-
                 source={{ uri: uri }}
                 style={styles.video}
                 ref={playVideo}
@@ -181,10 +181,9 @@ export const VideoComponent = (props: VideoProps) => {
                         minimumTrackTintColor={'#fff'}
                         maximumTrackTintColor={'#D1D3D4'}
                         thumbTintColor={'#fff'}
-                        trackStyle={styles.trackStyle}
-                        thumbStyle={styles.thumbStyle}
                         value={currentTime}
                         onSlidingStart={_onSlidingStart}
+                        thumbTouchSize={{ width: 115, height: 115 }}
                         onSlidingComplete={_onSlidingComplete}
                     />
                     <Text style={styles.textTime}>{_renderTime(duration)}</Text>
@@ -277,6 +276,7 @@ const styles = StyleSheet.create({
     },
     trackStyle: {
         height: 100,
+        width: 10
     },
     thumbStyle: {
         width: 112,
