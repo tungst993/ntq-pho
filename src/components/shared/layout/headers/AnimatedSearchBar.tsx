@@ -87,7 +87,7 @@ const AnimatedSearchBar: React.FC<AnimatedSearchBarProps> = ({
         style={[styles(theme).animatedSearchBar, style]}
         value={value}
         placeholder={placeholder}
-        multiline
+        // multiline
         placeholderTextColor={theme.text02}
         onChangeText={(text: string) => {
           onChangeText(text);
@@ -111,7 +111,7 @@ const styles = (theme = {} as ThemeColors) =>
     container: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingBottom: 5,
+      // paddingBottom: 5,
     },
     animatedSearchBar: {
       ...FontWeights.Light,
@@ -122,7 +122,8 @@ const styles = (theme = {} as ThemeColors) =>
       backgroundColor: theme.placeholder,
       color: theme.text01,
       borderRadius: 20,
-      marginVertical: 5,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     cancel: {
       height: 20,

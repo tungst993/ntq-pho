@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable prettier/prettier */
 import React, { useRef, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { useRecoilValue } from 'recoil';
 import { themeState } from '../../recoil/theme/atoms';
 import type { ThemeColors } from '../../types/theme';
@@ -17,9 +17,11 @@ import { IconSizes } from '../../theme/Icon';
 import { MaterialColors } from '../../theme';
 interface CommentProps {
 	onReply: () => void;
-	infoUser: (data: any) => void
+	infoUser: (data: any) => void;
+
+	isChild?: boolean
 }
-export const Comment = ({ onReply, infoUser }: CommentProps) => {
+export const Comment = ({ onReply, infoUser, isChild = false }: CommentProps) => {
 	const theme = useRecoilValue(themeState);
 	const style = styles(theme);
 	const [likeComment, setLikeComment] = useState(false);
@@ -46,9 +48,9 @@ export const Comment = ({ onReply, infoUser }: CommentProps) => {
 		);
 	};
 	return (
-		<View>
+		<View style={{ paddingLeft: isChild ? 50 : 0 }} onLayout={(event) => console.log(event.nativeEvent.layout)}>
 			<View style={[style.row, style.viewComment]}>
-				<NativeImage uri={'https://itcafe.vn/wp-content/uploads/2021/01/anh-gai-xinh-4.jpg'} style={style.avatar} />
+				<NativeImage uri={'https://itcafe.vn/wp-content/uploads/2021/01/anh-gai-xinh-4.jpg'} style={isChild ? style.avatarReply : style.avatar} />
 				<View style={{ flex: 1 }}>
 					<Swipeable ref={swipeableRef}
 						onSwipeableWillOpen={() => setBorderRadius(0)}
@@ -75,9 +77,6 @@ export const Comment = ({ onReply, infoUser }: CommentProps) => {
 							<TouchableOpacity onPress={() => setLikeComment(!likeComment)} style={style.paddingHorizontal20}>
 								<Text style={[style.textTime, { color: likeComment ? '#5890ff' : theme.text02, fontWeight: '600' }]}>Thích</Text>
 							</TouchableOpacity>
-							<TouchableOpacity>
-								<Text style={[style.textTime, { fontWeight: '600' }]}>Trả lời</Text>
-							</TouchableOpacity>
 						</View>
 						<View style={style.row}>
 							<Text style={[style.textReaction]}>{numberReaction(100)}</Text>
@@ -98,9 +97,31 @@ export const Comment = ({ onReply, infoUser }: CommentProps) => {
 					</View>
 				</View>
 			</View>
+			{
+				!isChild && <CommentChildList onReply={onReply} infoUser={() => infoUser('ahsjdash')} />
+			}
 		</View>
 	);
 };
+
+const CommentChildList = ({ onReply, infoUser }: any) => {
+	const theme = useRecoilValue(themeState);
+	const style = styles(theme);
+	return (
+		<FlatList
+			scrollEnabled={false}
+			data={[1, 2, 3, 4]}
+			renderItem={({ item, index }) => {
+				return (
+					<Comment isChild onReply={() => { onReply(); }} infoUser={(value) => { infoUser(value); }} />
+				);
+			}}
+			keyExtractor={index => index.toString()}
+			contentContainerStyle={[style.paddingHorizontal20, { marginBottom: 10 }]}
+		/>
+	);
+};
+
 const styles = (theme = {} as ThemeColors) =>
 	StyleSheet.create({
 		container: {
@@ -128,6 +149,12 @@ const styles = (theme = {} as ThemeColors) =>
 		avatar: {
 			width: 40,
 			height: 40,
+			borderRadius: 40,
+			marginRight: 10,
+		},
+		avatarReply: {
+			width: 30,
+			height: 30,
 			borderRadius: 40,
 			marginRight: 10,
 		},

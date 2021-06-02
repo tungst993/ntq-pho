@@ -1,13 +1,14 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useRef, useState } from 'react';
-import { Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableOpacity, View, } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableOpacity, View, FlatList, Image, Platform, PermissionsAndroid } from 'react-native';
 import { ifIphoneX } from 'react-native-iphone-x-helper';
 import { useRecoilValue } from 'recoil';
 import { themeState } from '../../../recoil/theme/atoms';
 import type { ThemeColors } from '../../../types/theme';
 import Entypo from 'react-native-vector-icons/Entypo';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { IconSizes } from '../../../theme/Icon';
-import { useNavigation } from '@react-navigation/core';
+import { useIsFocused, useNavigation } from '@react-navigation/core';
 import NativeImage from '../../../components/shared/NativeImage';
 import moment from 'moment';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
@@ -17,10 +18,13 @@ import LottieView from 'lottie-react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { numberReaction } from '../../../utils/constants';
 import LinearGradient from 'react-native-linear-gradient';
-import { FlatList } from 'react-native-gesture-handler';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import AnimatedSearchBar from '../../../components/shared/layout/headers/AnimatedSearchBar';
 import { Comment } from '../../../components/Comment';
+import { Modalize } from 'react-native-modalize';
+import { noPermissionNotification } from '../../../helpers/notifications';
+import CameraRoll, { PhotoIdentifier } from '@react-native-community/cameraroll';
+import { ThemeStatic } from '../../../theme';
 export const DetailPost = () => {
   const theme = useRecoilValue(themeState);
   const style = styles(theme);
@@ -32,6 +36,12 @@ export const DetailPost = () => {
   const [comment, setComment] = useState('');
   const [isReply, setIsReply] = useState(false);
   const [infoUserReply, setInfoUserReply] = useState('');
+  const [openMedia, setOpenMedia] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const albumRef = useRef(null);
+  const [page, setPage] = useState(1);
+  const [medias, setMedias] = useState<PhotoIdentifier[]>([]);
+  const isFocused = useIsFocused();
 
   const data = [
     'https://uploads-ssl.webflow.com/5f5f2b58b1af780151375838/606916bf1e21c70142eb887a_GaiHot2k__anh-gai-xinh-de-thuong-viet-nam%252B%2525282%252529.jpeg',
@@ -259,6 +269,42 @@ export const DetailPost = () => {
       />
     );
   };
+  async function hasAndroidPermission() {
+    const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
+
+    const hasPermission = await PermissionsAndroid.check(permission);
+    if (hasPermission) {
+      return true;
+    }
+
+    const status = await PermissionsAndroid.request(permission);
+    return status === 'granted';
+  }
+  useEffect(() => {
+    if (openMedia) {
+      setTimeout(() => {
+        //@ts-ignore
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        albumRef?.current?.open();
+      }, 100);
+
+      const getMedia = async () => {
+        if (Platform.OS === 'android' && !(await hasAndroidPermission())) {
+          noPermissionNotification();
+          return;
+        }
+        CameraRoll.getPhotos({ first: page * 50, assetType: 'Photos' }).then((res) => {
+          setMedias(res.edges);
+        });
+      };
+      getMedia();
+    }
+  }, [isFocused, page, openMedia]);
+  const handleSelectImage = (index: number) => {
+    setSelectedIndex(index);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    albumRef?.current?.close();
+  };
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'}>
       <View style={[style.header, style.row]}>
@@ -272,6 +318,7 @@ export const DetailPost = () => {
         </View>
       </View>
       <ScrollView
+        nestedScrollEnabled
         style={style.container}>
 
         <Text style={[style.textContent, style.paddingHorizontal20]}>Như một thói quen, cứ thứ 2 đầu tuần, các thành viên lại cùng nhau khoác lên mình chiếc áo đồng phục lan tỏa niềm tự hào và chất riêng của người NTQ. Ngày hôm nay, các bạn hãy mặc áo đồng phục của công ty (dù có đến công ty hay làm việc ở nhà) và đừng quên chụp ảnh lại để khoe với mọi người nha!!</Text>
@@ -298,16 +345,59 @@ export const DetailPost = () => {
       </ScrollView>
       <View style={[style.viewPostComment]}>
         {isReply &&
-          <View style={[style.row, { marginBottom: 10 }]}>
-            <Text style={{ fontSize: 12, color: theme.text01, paddingLeft: 50, }}>Đang trả lời <Text style={{ fontWeight: '600' }}>{infoUserReply}</Text></Text>
-            <TouchableOpacity onPress={() => setIsReply(false)} style={{ marginLeft: 20 }}><Text style={{ color: theme.text01 }}>Huỷ</Text></TouchableOpacity>
+          <View style={[style.row, { marginBottom: 10, marginLeft: 50, }]}>
+            <Text style={{ fontSize: 12, color: theme.text01, }}>Đang trả lời <Text style={{ fontWeight: '600' }}>{infoUserReply}</Text></Text>
+            <TouchableOpacity onPress={() => setIsReply(false)} style={{ marginLeft: 20 }}><Text style={{ color: theme.text01, fontSize: 12 }}>Huỷ</Text></TouchableOpacity>
           </View>}
-        <View style={style.row}>
-          <SimpleLineIcons name="camera" color={theme.text02} size={20} />
+        {selectedIndex !== -1 ? <View style={{ height: 70, width: 70, marginBottom: 10, marginLeft: 50, }}>
+          <Image source={{ uri: medias[selectedIndex].node.image.uri }} style={{ height: 70, width: 70, borderRadius: 5, }} />
+          <FontAwesome onPress={() => setSelectedIndex(-1)} name={'close'} size={IconSizes.x5} style={style.iconDelete} color={theme.text01} />
+        </View> : null}
+        <View style={[style.row, { paddingBottom: 10 }]}>
+          <TouchableOpacity disabled={selectedIndex === -1 ? false : true} onPress={() => {
+            setOpenMedia(true);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            albumRef?.current?.open();
+            Keyboard.dismiss();
+          }}>
+            <SimpleLineIcons name="camera" color={selectedIndex === -1 ? theme.text01 : theme.text02} size={20} />
+          </TouchableOpacity>
           <AnimatedSearchBar placeholder={'Viết bình luận ...'} value={comment} open={isReply} onChangeText={setComment} />
         </View>
+
       </View>
       <ImageView onClose={() => setVisible(false)} images={listImageFull} imageIndex={indexImage} isVisible={visible} />
+
+      <Modalize
+        keyboardAvoidingBehavior={'padding'}
+        snapPoint={400}
+        ref={albumRef}
+        scrollViewProps={{ showsVerticalScrollIndicator: false }}
+        modalStyle={styles(theme).pickerContainer}
+        onClose={() => {
+          setOpenMedia(false);
+          // setSelectedIndex(-1);
+        }}>
+        <FlatList
+          data={medias}
+          style={{ flex: 1 }}
+          contentContainerStyle={styles(theme).content}
+          keyExtractor={(item, index) => index.toString() + 'image list'}
+          numColumns={4}
+          horizontal={false}
+          onEndReachedThreshold={0.3}
+          onEndReached={() => setPage(page + 1)}
+          renderItem={({ item, index }) => (
+            <TouchableOpacity
+              style={[styles(theme).image]}
+              onPress={() => {
+                handleSelectImage(index);
+              }}>
+              <Image source={{ uri: item.node.image.uri }} style={{ height: '100%', width: '100%' }} />
+            </TouchableOpacity>
+          )}
+        />
+      </Modalize>
     </KeyboardAvoidingView>
   );
 };
@@ -447,5 +537,44 @@ const styles = (theme = {} as ThemeColors) =>
       flex: 1,
       paddingHorizontal: 8,
       minHeight: 36
+    },
+    pickerContainer: {
+      backgroundColor: theme.base,
+      paddingVertical: 20,
+      flex: 1,
+    },
+    image: {
+      width: '25%',
+      borderRadius: 20,
+      aspectRatio: 1,
+      borderWidth: 1,
+      borderColor: theme.base,
+    },
+    content: {
+    },
+    selectedContainer: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: theme.base,
+      opacity: 0.7,
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 99,
+    },
+    selectedCircle: {
+      backgroundColor: theme.accent,
+      padding: 6,
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 100,
+      borderRadius: 100,
+    },
+    iconDelete: {
+      position: 'absolute',
+      top: 0,
+      right: 5,
     }
   });
