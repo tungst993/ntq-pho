@@ -18,7 +18,9 @@ export const mainStyles = StyleSheet.create({
     alignItems: 'center',
   },
   spaceBetween: {
+    flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   avatarImage: {
     height: 40,

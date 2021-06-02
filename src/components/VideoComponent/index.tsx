@@ -106,6 +106,7 @@ export const VideoComponent = (props: VideoProps) => {
     const _renderVideo = () => {
         return (
             <Video
+
                 source={{ uri: uri }}
                 style={styles.video}
                 ref={playVideo}
@@ -143,7 +144,7 @@ export const VideoComponent = (props: VideoProps) => {
                     setPause(true);
                     setStop(true);
                 }}
-                resizeMode={'contain'}
+                resizeMode={'none'}
             />
         );
     };
@@ -214,11 +215,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     containerVideo: {
-        width: '100%',
+        // width: '100%',
         backgroundColor: '#000',
         height: 250,
         justifyContent: 'center',
         alignItems: 'center',
+
     },
     video: {
         width: '100%',

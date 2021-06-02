@@ -17,7 +17,7 @@ import LoadingIndicator from '../../components/shared/LoadingIndicator';
 import { IconSizes } from '../../theme/Icon';
 import { AppRoutes } from '../../navigator/app-routes';
 import { useNavigation } from '@react-navigation/core';
-import { Theme, ThemeStatic, ThemeVariant } from '../../theme';
+import { Theme, ThemeVariant } from '../../theme';
 
 const ProfileScreen: React.FC = () => {
   const [theme, setTheme] = useRecoilState(themeState);

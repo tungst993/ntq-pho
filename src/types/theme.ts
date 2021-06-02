@@ -28,6 +28,7 @@ export type ThemeColors = {
   white: string;
   shadow: string;
   modal: string;
+  divider: string;
 };
 
 export type ThemeVariantType = {

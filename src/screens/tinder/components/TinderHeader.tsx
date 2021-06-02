@@ -8,6 +8,7 @@ import IconButton from '../../../components/shared/Iconbutton';
 import Feather from 'react-native-vector-icons/Feather';
 import { AppRoutes } from '../../../navigator/app-routes';
 import { ThemeStatic } from '../../../theme';
+import { useNavigation } from '@react-navigation/core';
 
 export type TinderHeaderProps = {
   onChangetab: (tab: AppRoutes) => void;
@@ -16,9 +17,16 @@ export type TinderHeaderProps = {
 
 const TinderHeader: React.FC<TinderHeaderProps> = ({ onChangetab, tab }) => {
   const theme = useRecoilValue(themeState);
+  const { goBack } = useNavigation();
 
   return (
     <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-around' }}>
+      <IconButton
+        onPress={() => {
+          goBack();
+        }}
+        Icon={() => <FontAwesome name="close" style={{ fontSize: 20 }} color={theme.text02} />}
+      />
       <IconButton
         onPress={() => {
           onChangetab(AppRoutes.TINDER_PROFILE);
