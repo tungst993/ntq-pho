@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useRef, useState } from 'react';
-import { Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableOpacity, View, FlatList, Image, Platform, PermissionsAndroid } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableOpacity, View, FlatList, Image, Platform, PermissionsAndroid, Pressable } from 'react-native';
 import { ifIphoneX } from 'react-native-iphone-x-helper';
 import { useRecoilValue } from 'recoil';
 import { themeState } from '../../../recoil/theme/atoms';
@@ -25,6 +25,8 @@ import { Modalize } from 'react-native-modalize';
 import { noPermissionNotification } from '../../../helpers/notifications';
 import CameraRoll, { PhotoIdentifier } from '@react-native-community/cameraroll';
 import { ThemeStatic } from '../../../theme';
+import UserCard from '../../../components/UserCard';
+import { PostOption } from '../../../components/PostOption';
 export const DetailPost = () => {
   const theme = useRecoilValue(themeState);
   const style = styles(theme);
@@ -39,6 +41,7 @@ export const DetailPost = () => {
   const [openMedia, setOpenMedia] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const albumRef = useRef(null);
+  const listlikeRef = useRef(null);
   const [page, setPage] = useState(1);
   const [medias, setMedias] = useState<PhotoIdentifier[]>([]);
   const isFocused = useIsFocused();
@@ -305,6 +308,18 @@ export const DetailPost = () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     albumRef?.current?.close();
   };
+  const OptionVoteArea = () => {
+    return (
+      <View style={style.viewOptionVote}>
+        <FlatList
+          data={[1, 2, 3]}
+          renderItem={({ item }) => <PostOption />}
+          keyExtractor={index => index.toString()}
+          contentContainerStyle={style.paddingHorizontal20}
+        />
+      </View>
+    );
+  };
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'}>
       <View style={[style.header, style.row]}>
@@ -322,9 +337,10 @@ export const DetailPost = () => {
         style={style.container}>
 
         <Text style={[style.textContent, style.paddingHorizontal20]}>Như một thói quen, cứ thứ 2 đầu tuần, các thành viên lại cùng nhau khoác lên mình chiếc áo đồng phục lan tỏa niềm tự hào và chất riêng của người NTQ. Ngày hôm nay, các bạn hãy mặc áo đồng phục của công ty (dù có đến công ty hay làm việc ở nhà) và đừng quên chụp ảnh lại để khoe với mọi người nha!!</Text>
-        {ImageArea()}
+        {/* {ImageArea()}  */}
+        {OptionVoteArea()}
         {ReactionArea()}
-        <View style={[style.row, style.paddingHorizontal20]}>
+        <Pressable onPress={() => listlikeRef?.current?.open()} style={[style.row, style.paddingHorizontal20]}>
           <LinearGradient
             colors={['#35a3fa', '#2e6ee3']}
             style={{
@@ -339,7 +355,7 @@ export const DetailPost = () => {
             <AntDesign name="like1" style={{ fontSize: 9 }} color={theme.white} />
           </LinearGradient>
           <Text style={style.textReaction}>{numberReaction(100)}</Text>
-        </View>
+        </Pressable>
         {CommentArea()}
 
       </ScrollView>
@@ -369,14 +385,12 @@ export const DetailPost = () => {
       <ImageView onClose={() => setVisible(false)} images={listImageFull} imageIndex={indexImage} isVisible={visible} />
 
       <Modalize
-        keyboardAvoidingBehavior={'padding'}
         snapPoint={400}
         ref={albumRef}
         scrollViewProps={{ showsVerticalScrollIndicator: false }}
         modalStyle={styles(theme).pickerContainer}
         onClose={() => {
           setOpenMedia(false);
-          // setSelectedIndex(-1);
         }}>
         <FlatList
           data={medias}
@@ -397,6 +411,35 @@ export const DetailPost = () => {
             </TouchableOpacity>
           )}
         />
+      </Modalize>
+      <Modalize
+        snapPoint={500}
+        ref={listlikeRef}
+        scrollViewProps={{ showsVerticalScrollIndicator: false }}
+        modalStyle={styles(theme).pickerContainer}
+        onClose={() => {
+        }}>
+        <>
+          <FlatList
+            data={[1, 2, 3, 4, 5, 6]}
+            style={{ flex: 1 }}
+            contentContainerStyle={styles(theme).flListLike}
+            keyExtractor={(item, index) => index.toString()}
+            onEndReachedThreshold={0.3}
+            renderItem={({ item, index }) => (
+              <TouchableOpacity
+                style={[style.row, { marginTop: 16 }]}
+                onPress={() => {
+                }}>
+                <UserCard
+                  avatar={'https://sohanews.sohacdn.com/2020/2/26/photo-1-158270587240769675748.jpg'}
+                  name={'username'}
+                  nickname={'Dev - OS8'}
+                  userId={1} />
+              </TouchableOpacity>
+            )}
+          />
+        </>
       </Modalize>
     </KeyboardAvoidingView>
   );
@@ -576,5 +619,12 @@ const styles = (theme = {} as ThemeColors) =>
       position: 'absolute',
       top: 0,
       right: 5,
+    },
+
+    flListLike: {
+      paddingHorizontal: 20
+    },
+    viewOptionVote: {
+      flex: 1
     }
   });
