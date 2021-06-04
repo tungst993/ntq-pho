@@ -1,9 +1,9 @@
 import React from 'react';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { TextInput, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Controller, FieldValues, useFieldArray, UseFormMethods } from 'react-hook-form';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import AntDesignicons from 'react-native-vector-icons/AntDesign';
 import { Text } from 'react-native-animatable';
-import { Button, Input } from 'react-native-elements';
+import { Input } from 'react-native-elements';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import { useRecoilValue } from 'recoil';
 import { themeState } from '../../../recoil/theme/atoms';
@@ -13,17 +13,17 @@ import { IconSizes } from '../../../theme/Icon';
 
 interface AddVoteProps {
   setVoteVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  form: UseFormMethods<FieldValues>;
 }
 
-const AddVote = React.memo<AddVoteProps>(({ setVoteVisible }) => {
+const AddVote = React.memo<AddVoteProps>(({ setVoteVisible, form }) => {
   const theme = useRecoilValue(themeState);
   const styles = style(theme);
 
-  const form = useForm();
   const { control } = form;
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'test',
+    name: 'vote',
   });
 
   function onHideVote() {
@@ -40,11 +40,11 @@ const AddVote = React.memo<AddVoteProps>(({ setVoteVisible }) => {
       </View>
       <View style={{ marginRight: 16 }}>
         {fields.map((field, index) => (
-          <View key={field.id} style={styles.itemWrapper}>
+          <View key={index} style={styles.itemWrapper}>
             <View style={{ width: '90%' }}>
               <Controller
                 control={control}
-                name={`test.${index}.value`}
+                name={`vote.${index}.content`}
                 render={({ onChange, onBlur, value }) => {
                   return (
                     <Input

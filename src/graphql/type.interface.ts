@@ -119,7 +119,7 @@ export type Post = Node & {
   __typename?: 'Post';
   id: Scalars['Float'];
   creatorId: Scalars['Float'];
-  medias?: Maybe<Array<Scalars['Float']>>;
+  medias: Array<Scalars['Float']>;
   caption?: Maybe<Scalars['String']>;
   groupId?: Maybe<Scalars['Float']>;
   department?: Maybe<UserDepartmentEnum>;
@@ -131,6 +131,8 @@ export type Post = Node & {
   totalLike: Scalars['Float'];
   isLike: Scalars['Boolean'];
   creatorInfo?: Maybe<User>;
+  options: Array<PostOption>;
+  mediasData: Array<Media>;
 };
 
 export type PostConnection = {
@@ -317,6 +319,7 @@ export type TinderMatch = Node & {
   targetUser: Scalars['Float'];
   status: TinderMatchStatus;
   isSuper: Scalars['Boolean'];
+  isNew: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
 };
@@ -325,6 +328,17 @@ export enum TinderMatchStatus {
   REQUEST = 'REQUEST',
   MATCHED = 'MATCHED',
 }
+
+export type PostOption = Node & {
+  __typename?: 'PostOption';
+  id: Scalars['Float'];
+  postId: Scalars['Float'];
+  content: Scalars['String'];
+  voted: Array<Scalars['Float']>;
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  voterInfo: Array<User>;
+};
 
 export type Query = {
   __typename?: 'Query';
@@ -437,6 +451,9 @@ export type Mutation = {
   loginWithSNS: AuthConnection;
   logout: Scalars['Boolean'];
   setSeenNotification: Scalars['Boolean'];
+  addOptionToPost: PostOption;
+  voteOption: PostOption;
+  deleteOption: Scalars['Boolean'];
   createComment: Comments;
   updateComment: Comments;
   removeComment: Scalars['Boolean'];
@@ -486,6 +503,21 @@ export type MutationCreateDirArgs = {
 
 export type MutationLoginWithSnsArgs = {
   input: LoginSnsInput;
+};
+
+export type MutationAddOptionToPostArgs = {
+  content: Scalars['String'];
+  postId: Scalars['Float'];
+};
+
+export type MutationVoteOptionArgs = {
+  id: Scalars['Float'];
+  postId: Scalars['Float'];
+};
+
+export type MutationDeleteOptionArgs = {
+  id: Scalars['Float'];
+  postId: Scalars['Float'];
 };
 
 export type MutationCreateCommentArgs = {
@@ -588,6 +620,12 @@ export type CreatePostInput = {
   groupId?: Maybe<Scalars['Float']>;
   department?: Maybe<Scalars['String']>;
   isPinned?: Maybe<Scalars['Boolean']>;
+  options?: Maybe<Array<CreatePostOptionDto>>;
+};
+
+export type CreatePostOptionDto = {
+  content: Scalars['String'];
+  voted?: Maybe<Array<Scalars['Float']>>;
 };
 
 export type UpdatePostInput = {
@@ -596,6 +634,7 @@ export type UpdatePostInput = {
   groupId?: Maybe<Scalars['Float']>;
   department?: Maybe<Scalars['String']>;
   isPinned?: Maybe<Scalars['Boolean']>;
+  options?: Maybe<Array<CreatePostOptionDto>>;
   id: Scalars['Float'];
 };
 
