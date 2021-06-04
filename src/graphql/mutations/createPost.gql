@@ -1,0 +1,33 @@
+mutation createPost($input: CreatePostInput!) {
+  createPost(input: $input) {
+    id
+    creatorId
+    medias
+    caption
+    groupId
+    department
+    isPinned
+    actualLike
+    score
+    createdAt
+    updatedAt
+    totalLike
+    isLike
+    creatorInfo {
+      id
+      firstName
+      lastName
+      fullName
+      nickname
+      intro
+      googleId
+      avatar
+      isNew
+      lastSeen
+      department
+      position
+      createdAt
+      updatedAt
+    }
+  }
+}

@@ -41,12 +41,16 @@ export const useFileUpload = (config?: AxiosRequestConfig) => {
             }),
           })
           .then((res) => {
+            console.log('res', res);
+
             if (res.status === 200 || res.status === 201) {
               return resolve(res.data);
             }
           })
           .catch((err) => {
             uploadErrorNotification('Media');
+            console.log('err', err);
+
             return reject(err.message);
           });
       });

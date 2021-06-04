@@ -12,6 +12,8 @@ import {
   Image,
   Platform,
   PermissionsAndroid,
+  Pressable,
+  TextInput,
 } from 'react-native';
 import { ifIphoneX } from 'react-native-iphone-x-helper';
 import { useRecoilValue } from 'recoil';
@@ -37,6 +39,9 @@ import { Modalize } from 'react-native-modalize';
 import { noPermissionNotification } from '../../../helpers/notifications';
 import CameraRoll, { PhotoIdentifier } from '@react-native-community/cameraroll';
 import { ThemeStatic } from '../../../theme';
+import UserCard from '../../../components/UserCard';
+import { PostOption } from '../../../components/PostOption';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 export const DetailPost = () => {
   const theme = useRecoilValue(themeState);
   const style = styles(theme);
@@ -51,9 +56,12 @@ export const DetailPost = () => {
   const [openMedia, setOpenMedia] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const albumRef = useRef(null);
+  const listlikeRef = useRef(null);
   const [page, setPage] = useState(1);
   const [medias, setMedias] = useState<PhotoIdentifier[]>([]);
   const isFocused = useIsFocused();
+  const [dataOption, setDataOption] = useState([1, 2, 3, 4]);
+  const [showInputComment, setShowInputComment] = useState(true);
 
   const data = [
     'https://uploads-ssl.webflow.com/5f5f2b58b1af780151375838/606916bf1e21c70142eb887a_GaiHot2k__anh-gai-xinh-de-thuong-viet-nam%252B%2525282%252529.jpeg',
@@ -321,6 +329,38 @@ export const DetailPost = () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     albumRef?.current?.close();
   };
+  const OptionVoteArea = () => {
+    return (
+      <View style={style.viewOptionVote}>
+        <FlatList
+          data={dataOption}
+          renderItem={({ item }) => <PostOption />}
+          keyExtractor={(index) => index.toString()}
+          contentContainerStyle={style.paddingHorizontal20}
+          ListFooterComponent={
+            <View style={style.row}>
+              <Ionicons
+                onPress={() => setDataOption([...dataOption, 5])}
+                name={'ios-add'}
+                size={IconSizes.x5}
+                color={theme.text02}
+                style={{ marginTop: 10, marginRight: 10 }}
+              />
+              <View style={style.addOption}>
+                <TextInput
+                  onFocus={() => setShowInputComment(false)}
+                  onBlur={() => setShowInputComment(true)}
+                  style={{ color: theme.text01 }}
+                  placeholderTextColor={theme.text02}
+                  placeholder={'Thêm lựa chọn thăm dò ý kiến...'}
+                />
+              </View>
+            </View>
+          }
+        />
+      </View>
+    );
+  };
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'}>
       <View style={[style.header, style.row]}>
@@ -345,9 +385,10 @@ export const DetailPost = () => {
           niềm tự hào và chất riêng của người NTQ. Ngày hôm nay, các bạn hãy mặc áo đồng phục của công ty (dù có đến
           công ty hay làm việc ở nhà) và đừng quên chụp ảnh lại để khoe với mọi người nha!!
         </Text>
-        {ImageArea()}
+        {/* {ImageArea()}  */}
+        {OptionVoteArea()}
         {ReactionArea()}
-        <View style={[style.row, style.paddingHorizontal20]}>
+        <Pressable onPress={() => listlikeRef?.current?.open()} style={[style.row, style.paddingHorizontal20]}>
           <LinearGradient
             colors={['#35a3fa', '#2e6ee3']}
             style={{
@@ -362,7 +403,7 @@ export const DetailPost = () => {
             <AntDesign name="like1" style={{ fontSize: 9 }} color={theme.white} />
           </LinearGradient>
           <Text style={style.textReaction}>{numberReaction(100)}</Text>
-        </View>
+        </Pressable>
         {CommentArea()}
       </ScrollView>
       <View style={[style.viewPostComment]}>
@@ -391,36 +432,36 @@ export const DetailPost = () => {
             />
           </View>
         ) : null}
-        <View style={[style.row, { paddingBottom: 10 }]}>
-          <TouchableOpacity
-            disabled={selectedIndex === -1 ? false : true}
-            onPress={() => {
-              setOpenMedia(true);
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-              albumRef?.current?.open();
-              Keyboard.dismiss();
-            }}>
-            <SimpleLineIcons name="camera" color={selectedIndex === -1 ? theme.text01 : theme.text02} size={20} />
-          </TouchableOpacity>
-          <AnimatedSearchBar
-            placeholder={'Viết bình luận ...'}
-            value={comment}
-            open={isReply}
-            onChangeText={setComment}
-          />
-        </View>
+        {showInputComment && (
+          <View style={[style.row, { paddingBottom: 10 }]}>
+            <TouchableOpacity
+              disabled={selectedIndex === -1 ? false : true}
+              onPress={() => {
+                setOpenMedia(true);
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                albumRef?.current?.open();
+                Keyboard.dismiss();
+              }}>
+              <SimpleLineIcons name="camera" color={selectedIndex === -1 ? theme.text01 : theme.text02} size={20} />
+            </TouchableOpacity>
+            <AnimatedSearchBar
+              placeholder={'Viết bình luận ...'}
+              value={comment}
+              open={isReply}
+              onChangeText={setComment}
+            />
+          </View>
+        )}
       </View>
       <ImageView onClose={() => setVisible(false)} images={listImageFull} imageIndex={indexImage} isVisible={visible} />
 
       <Modalize
-        keyboardAvoidingBehavior={'padding'}
         snapPoint={400}
         ref={albumRef}
         scrollViewProps={{ showsVerticalScrollIndicator: false }}
         modalStyle={styles(theme).pickerContainer}
         onClose={() => {
           setOpenMedia(false);
-          // setSelectedIndex(-1);
         }}>
         <FlatList
           data={medias}
@@ -441,6 +482,32 @@ export const DetailPost = () => {
             </TouchableOpacity>
           )}
         />
+      </Modalize>
+      <Modalize
+        snapPoint={500}
+        ref={listlikeRef}
+        scrollViewProps={{ showsVerticalScrollIndicator: false }}
+        modalStyle={styles(theme).pickerContainer}
+        onClose={() => {}}>
+        <>
+          <FlatList
+            data={[1, 2, 3, 4, 5, 6]}
+            style={{ flex: 1 }}
+            contentContainerStyle={styles(theme).flListLike}
+            keyExtractor={(item, index) => index.toString()}
+            onEndReachedThreshold={0.3}
+            renderItem={({ item, index }) => (
+              <TouchableOpacity style={[style.row, { marginTop: 16 }]} onPress={() => {}}>
+                <UserCard
+                  avatar={'https://sohanews.sohacdn.com/2020/2/26/photo-1-158270587240769675748.jpg'}
+                  name={'username'}
+                  nickname={'Dev - OS8'}
+                  userId={1}
+                />
+              </TouchableOpacity>
+            )}
+          />
+        </>
       </Modalize>
     </KeyboardAvoidingView>
   );
@@ -619,5 +686,21 @@ const styles = (theme = {} as ThemeColors) =>
       position: 'absolute',
       top: 0,
       right: 5,
+    },
+
+    flListLike: {
+      paddingHorizontal: 20,
+    },
+    viewOptionVote: {
+      flex: 1,
+    },
+    addOption: {
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: theme.text02,
+      borderRadius: 4,
+      padding: 5,
+      flex: 1,
+      marginTop: 12,
+      marginRight: 30,
     },
   });
