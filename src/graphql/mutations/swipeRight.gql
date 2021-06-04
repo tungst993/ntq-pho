@@ -1,0 +1,64 @@
+mutation swipeRight($targetUser: Float!) {
+  swipeRight(targetUser: $targetUser) {
+    id
+    initiator
+    targetUser
+    status
+    isSuper
+    isNew
+    createdAt
+    updatedAt
+    targetUserInfo {
+      id
+      images
+      gender
+      target
+      intro
+      userId
+      createdAt
+      updatedAt
+      userInfo {
+        id
+        firstName
+        lastName
+        fullName
+        nickname
+        intro
+        googleId
+        avatar
+        isNew
+        lastSeen
+        department
+        position
+        createdAt
+        updatedAt
+      }
+    }
+    initiatorUserInfo {
+      id
+      images
+      gender
+      target
+      intro
+      userId
+      createdAt
+      updatedAt
+      userInfo {
+        id
+        firstName
+        lastName
+        fullName
+        nickname
+        intro
+        googleId
+        avatar
+        isNew
+        lastSeen
+        department
+        position
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}

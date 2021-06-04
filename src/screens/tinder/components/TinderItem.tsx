@@ -3,27 +3,22 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useRecoilValue } from 'recoil';
 import NativeImage from '../../../components/shared/NativeImage';
+import type { TinderProfile } from '../../../graphql/type.interface';
 import { themeState } from '../../../recoil/theme/atoms';
 import { ThemeStatic } from '../../../theme';
 import type { ThemeColors } from '../../../types/theme';
 
 export type TinderItemProps = {
-  data: Item;
+  data: any | undefined;
 };
 
-export type Item = {
-  name: string;
-  intro: string;
-  images: string[];
-};
-
-const TinderItem: React.FC<TinderItemProps> = ({ data: { images, name, intro } }) => {
+const TinderItem: React.FC<TinderItemProps> = ({ data }) => {
   const theme = useRecoilValue(themeState);
   const styles = useStyle(theme);
   const [currentPic, setCurrentPic] = useState(0);
 
   const next = () => {
-    if (currentPic === images.length - 1) {
+    if (currentPic === (data?.images?.length ?? 0) - 1) {
       return;
     }
     setCurrentPic(currentPic + 1);
@@ -38,12 +33,12 @@ const TinderItem: React.FC<TinderItemProps> = ({ data: { images, name, intro } }
   return (
     <View style={styles.container}>
       <View style={styles.counterContainer}>
-        {images.map((item, index) => (
+        {(data?.images ?? []).map((_, index) => (
           <View
             style={[
               styles.counterItem,
               {
-                width: `${100 / images.length - 1}%`,
+                width: `${100 / (data?.images ?? []).length - 1}%`,
                 backgroundColor: currentPic === index ? ThemeStatic.white : ThemeStatic.translucent,
               },
             ]}
@@ -68,11 +63,11 @@ const TinderItem: React.FC<TinderItemProps> = ({ data: { images, name, intro } }
           'rgba(0,0,0,0.31)',
         ]}
         style={styles.infoContainer}>
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.intro}>{intro}</Text>
+        <Text style={styles.name}>{data?.userInfo?.fullName ?? ''}</Text>
+        <Text style={styles.intro}>{data?.intro ?? ''}</Text>
       </LinearGradient>
 
-      <NativeImage uri={images[currentPic]} style={styles.image} />
+      <NativeImage uri={(data?.images ?? [])[currentPic] ?? ''} style={styles.image} />
     </View>
   );
 };

@@ -1,0 +1,37 @@
+query getProfiles($page: Float!, $limit: Float!) {
+  getProfiles(page: $page, limit: $limit) {
+    items {
+      id
+      images
+      gender
+      target
+      intro
+      userId
+      createdAt
+      updatedAt
+      userInfo {
+        id
+        firstName
+        lastName
+        fullName
+        nickname
+        intro
+        googleId
+        avatar
+        isNew
+        lastSeen
+        department
+        position
+        createdAt
+        updatedAt
+      }
+    }
+    meta {
+      itemCount
+      totalItems
+      itemsPerPage
+      totalPages
+      currentPage
+    }
+  }
+}

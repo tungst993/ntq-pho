@@ -1,6 +1,18 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useRef, useState } from 'react';
-import { Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableOpacity, View, FlatList, Image, Platform, PermissionsAndroid } from 'react-native';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  FlatList,
+  Image,
+  Platform,
+  PermissionsAndroid,
+} from 'react-native';
 import { ifIphoneX } from 'react-native-iphone-x-helper';
 import { useRecoilValue } from 'recoil';
 import { themeState } from '../../../recoil/theme/atoms';
@@ -224,7 +236,13 @@ export const DetailPost = () => {
   };
   const ReactionArea = () => {
     return (
-      <View style={[style.row, style.paddingHorizontal20, style.border, { justifyContent: 'space-around', paddingVertical: 12, marginVertical: 10, }]}>
+      <View
+        style={[
+          style.row,
+          style.paddingHorizontal20,
+          style.border,
+          { justifyContent: 'space-around', paddingVertical: 12, marginVertical: 10 },
+        ]}>
         <TouchableOpacity
           hitSlop={{ top: 10, bottom: 10, left: 50, right: 50 }}
           onPress={() => setLike(!like)}
@@ -260,11 +278,9 @@ export const DetailPost = () => {
         scrollEnabled={false}
         data={[1, 2, 3, 4]}
         renderItem={({ item, index }) => {
-          return (
-            <Comment onReply={() => setIsReply(true)} infoUser={(value) => setInfoUserReply(value)} />
-          );
+          return <Comment onReply={() => setIsReply(true)} infoUser={(value) => setInfoUserReply(value)} />;
         }}
-        keyExtractor={index => index.toString()}
+        keyExtractor={(index) => index.toString()}
         contentContainerStyle={[style.paddingHorizontal20, { marginBottom: 10 }]}
       />
     );
@@ -308,7 +324,13 @@ export const DetailPost = () => {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'}>
       <View style={[style.header, style.row]}>
-        <Entypo onPress={navigation.goBack} name="chevron-thin-left" size={IconSizes.x5} color={theme.text01} style={{ marginRight: 10 }} />
+        <Entypo
+          onPress={navigation.goBack}
+          name="chevron-thin-left"
+          size={IconSizes.x5}
+          color={theme.text01}
+          style={{ marginRight: 10 }}
+        />
         <View style={style.row}>
           <NativeImage uri={'https://itcafe.vn/wp-content/uploads/2021/01/anh-gai-xinh-4.jpg'} style={style.avatar} />
           <View>
@@ -317,11 +339,12 @@ export const DetailPost = () => {
           </View>
         </View>
       </View>
-      <ScrollView
-        nestedScrollEnabled
-        style={style.container}>
-
-        <Text style={[style.textContent, style.paddingHorizontal20]}>Như một thói quen, cứ thứ 2 đầu tuần, các thành viên lại cùng nhau khoác lên mình chiếc áo đồng phục lan tỏa niềm tự hào và chất riêng của người NTQ. Ngày hôm nay, các bạn hãy mặc áo đồng phục của công ty (dù có đến công ty hay làm việc ở nhà) và đừng quên chụp ảnh lại để khoe với mọi người nha!!</Text>
+      <ScrollView nestedScrollEnabled style={style.container}>
+        <Text style={[style.textContent, style.paddingHorizontal20]}>
+          Như một thói quen, cứ thứ 2 đầu tuần, các thành viên lại cùng nhau khoác lên mình chiếc áo đồng phục lan tỏa
+          niềm tự hào và chất riêng của người NTQ. Ngày hôm nay, các bạn hãy mặc áo đồng phục của công ty (dù có đến
+          công ty hay làm việc ở nhà) và đừng quên chụp ảnh lại để khoe với mọi người nha!!
+        </Text>
         {ImageArea()}
         {ReactionArea()}
         <View style={[style.row, style.paddingHorizontal20]}>
@@ -341,30 +364,51 @@ export const DetailPost = () => {
           <Text style={style.textReaction}>{numberReaction(100)}</Text>
         </View>
         {CommentArea()}
-
       </ScrollView>
       <View style={[style.viewPostComment]}>
-        {isReply &&
-          <View style={[style.row, { marginBottom: 10, marginLeft: 50, }]}>
-            <Text style={{ fontSize: 12, color: theme.text01, }}>Đang trả lời <Text style={{ fontWeight: '600' }}>{infoUserReply}</Text></Text>
-            <TouchableOpacity onPress={() => setIsReply(false)} style={{ marginLeft: 20 }}><Text style={{ color: theme.text01, fontSize: 12 }}>Huỷ</Text></TouchableOpacity>
-          </View>}
-        {selectedIndex !== -1 ? <View style={{ height: 70, width: 70, marginBottom: 10, marginLeft: 50, }}>
-          <Image source={{ uri: medias[selectedIndex].node.image.uri }} style={{ height: 70, width: 70, borderRadius: 5, }} />
-          <FontAwesome onPress={() => setSelectedIndex(-1)} name={'close'} size={IconSizes.x5} style={style.iconDelete} color={theme.text01} />
-        </View> : null}
+        {isReply && (
+          <View style={[style.row, { marginBottom: 10, marginLeft: 50 }]}>
+            <Text style={{ fontSize: 12, color: theme.text01 }}>
+              Đang trả lời <Text style={{ fontWeight: '600' }}>{infoUserReply}</Text>
+            </Text>
+            <TouchableOpacity onPress={() => setIsReply(false)} style={{ marginLeft: 20 }}>
+              <Text style={{ color: theme.text01, fontSize: 12 }}>Huỷ</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {selectedIndex !== -1 ? (
+          <View style={{ height: 70, width: 70, marginBottom: 10, marginLeft: 50 }}>
+            <Image
+              source={{ uri: medias[selectedIndex].node.image.uri }}
+              style={{ height: 70, width: 70, borderRadius: 5 }}
+            />
+            <FontAwesome
+              onPress={() => setSelectedIndex(-1)}
+              name={'close'}
+              size={IconSizes.x5}
+              style={style.iconDelete}
+              color={theme.text01}
+            />
+          </View>
+        ) : null}
         <View style={[style.row, { paddingBottom: 10 }]}>
-          <TouchableOpacity disabled={selectedIndex === -1 ? false : true} onPress={() => {
-            setOpenMedia(true);
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-            albumRef?.current?.open();
-            Keyboard.dismiss();
-          }}>
+          <TouchableOpacity
+            disabled={selectedIndex === -1 ? false : true}
+            onPress={() => {
+              setOpenMedia(true);
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+              albumRef?.current?.open();
+              Keyboard.dismiss();
+            }}>
             <SimpleLineIcons name="camera" color={selectedIndex === -1 ? theme.text01 : theme.text02} size={20} />
           </TouchableOpacity>
-          <AnimatedSearchBar placeholder={'Viết bình luận ...'} value={comment} open={isReply} onChangeText={setComment} />
+          <AnimatedSearchBar
+            placeholder={'Viết bình luận ...'}
+            value={comment}
+            open={isReply}
+            onChangeText={setComment}
+          />
         </View>
-
       </View>
       <ImageView onClose={() => setVisible(false)} images={listImageFull} imageIndex={indexImage} isVisible={visible} />
 
@@ -454,7 +498,7 @@ const styles = (theme = {} as ThemeColors) =>
       width: responsiveWidth(49.5),
       height: '100%',
       borderWidth: StyleSheet.hairlineWidth,
-      borderColor: theme.text02
+      borderColor: theme.text02,
     },
     viewImage3: {
       width: responsiveWidth(49.5),
@@ -496,18 +540,18 @@ const styles = (theme = {} as ThemeColors) =>
     },
     viewComment: {
       marginTop: 12,
-      alignItems: 'flex-start'
+      alignItems: 'flex-start',
     },
     viewContentComment: {
       backgroundColor: theme.comment,
       padding: 10,
       borderRadius: 12,
-      flex: 1
+      flex: 1,
     },
     txtComment: {
       fontSize: 14,
       color: theme.text01,
-      lineHeight: 16
+      lineHeight: 16,
     },
     viewPostComment: {
       backgroundColor: theme.base,
@@ -536,7 +580,7 @@ const styles = (theme = {} as ThemeColors) =>
       borderRadius: 20,
       flex: 1,
       paddingHorizontal: 8,
-      minHeight: 36
+      minHeight: 36,
     },
     pickerContainer: {
       backgroundColor: theme.base,
@@ -550,8 +594,7 @@ const styles = (theme = {} as ThemeColors) =>
       borderWidth: 1,
       borderColor: theme.base,
     },
-    content: {
-    },
+    content: {},
     selectedContainer: {
       position: 'absolute',
       top: 0,
@@ -576,5 +619,5 @@ const styles = (theme = {} as ThemeColors) =>
       position: 'absolute',
       top: 0,
       right: 5,
-    }
+    },
   });

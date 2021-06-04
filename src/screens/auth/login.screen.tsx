@@ -89,7 +89,7 @@ const LoginScreen = memo<Props>(() => {
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.signIn();
       const token = await GoogleSignin.getTokens();
-
+      console.log(token);
       loginWithSns({
         variables: {
           input: {

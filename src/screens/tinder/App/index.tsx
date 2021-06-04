@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { ifIphoneX } from 'react-native-iphone-x-helper';
 import { useRecoilValue } from 'recoil';
@@ -8,21 +8,41 @@ import type { ThemeColors } from '../../../types/theme';
 import TinderHeader from '../components/TinderHeader';
 import TinderMessageScreen from '../Message';
 import TinderProfileScreen from '../Profile';
-import { listData } from '../fakeData';
 import TinderItem from '../components/TinderItem';
 import Swiper from 'react-native-deck-swiper';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
+import { useGetProfilesLazyQuery } from '../../../graphql/queries/getProfiles.generated';
+import LottieView from 'lottie-react-native';
+import { listData } from '../fakeData';
 
 const TinderInAppScreen = () => {
   const theme = useRecoilValue(themeState);
   const styles = useStyle(theme);
 
+  const [getProfiles, { data: fetchProfile, loading }] = useGetProfilesLazyQuery({
+    fetchPolicy: 'network-only',
+    onError: (err) => console.log(err),
+  });
+
+  const data = fetchProfile?.getProfiles.items;
+
   const [tab, setTab] = useState(AppRoutes.TINDER_APP_SCREEN);
-  const [data, setData] = useState(listData);
+  const [page, setPage] = useState(1);
 
   const handleChangeTab = (tab: AppRoutes) => {
     setTab(tab);
   };
+
+  useEffect(() => {
+    if (tab === AppRoutes.TINDER_APP_SCREEN) {
+      getProfiles({
+        variables: {
+          limit: 20,
+          page,
+        },
+      });
+    }
+  }, [tab, page, getProfiles]);
 
   const carouselRef = useRef(null);
 
@@ -32,10 +52,13 @@ const TinderInAppScreen = () => {
       {tab === AppRoutes.TINDER_PROFILE && <TinderProfileScreen />}
       {tab === AppRoutes.TINDER_APP_SCREEN && (
         <View style={styles.contentContainer}>
+          {/* {loading && data ? (
+            <LottieView source={require('../../../assets1/tinder_loading.json')} autoPlay loop />
+          ) : ( */}
           <Swiper
-            keyExtractor={(data) => data.name}
-            renderCard={(item) => <TinderItem data={item} />}
-            cards={data}
+            keyExtractor={(data) => data?.id.toString()}
+            renderCard={(item) => <TinderItem data={item ?? {}} />}
+            cards={data ?? []}
             ref={carouselRef}
             infinite
             backgroundColor={theme.secondary}
@@ -43,7 +66,7 @@ const TinderInAppScreen = () => {
             cardVerticalMargin={0}
             cardHorizontalMargin={0}
             showSecondCard
-            stackSize={data.length}
+            stackSize={3}
             onSwipedLeft={() => {}}
             onSwipedRight={() => {}}
             onSwipedTop={() => {}}
@@ -135,6 +158,7 @@ const TinderInAppScreen = () => {
               },
             }}
           />
+          {/* )} */}
         </View>
       )}
       {tab === AppRoutes.TINDER_MESSAGE && <TinderMessageScreen />}

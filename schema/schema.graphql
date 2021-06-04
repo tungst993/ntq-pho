@@ -103,7 +103,7 @@ type AuthConnection {
 type Post implements Node {
   id: Float!
   creatorId: Float!
-  medias: [Float!]
+  medias: [Float!]!
   caption: String
   groupId: Float
   department: UserDepartmentEnum
@@ -115,6 +115,8 @@ type Post implements Node {
   totalLike: Float!
   isLike: Boolean!
   creatorInfo: User
+  options: [PostOption!]!
+  mediasData: [Media!]!
 }
 
 type PostConnection {
@@ -276,19 +278,42 @@ enum TinderGenderEnum {
   ALL
 }
 
+type TinderProfileConnection {
+  items: [TinderProfile!]
+  meta: BasePaginationMeta!
+}
+
 type TinderMatch implements Node {
   id: Float!
   initiator: Float!
   targetUser: Float!
   status: TinderMatchStatus!
   isSuper: Boolean!
+  isNew: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
+  targetUserInfo: TinderProfile!
+  initiatorUserInfo: TinderProfile!
 }
 
 enum TinderMatchStatus {
   REQUEST
   MATCHED
+}
+
+type TinderMatchConnection {
+  items: [TinderMatch!]
+  meta: BasePaginationMeta!
+}
+
+type PostOption implements Node {
+  id: Float!
+  postId: Float!
+  content: String!
+  voted: [Float!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  voterInfo: [User!]!
 }
 
 type Query {
@@ -310,7 +335,9 @@ type Query {
   getMessage(page: Float!, limit: Float!, chatId: Float!): MessageConnection!
   myGroup(page: Float = 1, limit: Float = 10): GroupConnection!
   searchGroup(page: Float = 1, limit: Float = 10, search: String = ""): GroupConnection!
+  myTinderMatches(page: Float!, limit: Float!): TinderMatchConnection!
   myTinderProfile: TinderProfile!
+  getProfiles(page: Float!, limit: Float!): TinderProfileConnection!
 }
 
 type Mutation {
@@ -324,6 +351,9 @@ type Mutation {
   loginWithSNS(input: LoginSNSInput!): AuthConnection!
   logout: Boolean!
   setSeenNotification: Boolean!
+  addOptionToPost(content: String!, postId: Float!): PostOption!
+  voteOption(id: Float!, postId: Float!): PostOption!
+  deleteOption(id: Float!, postId: Float!): Boolean!
   createComment(input: CreateCommentInput!): Comments!
   updateComment(input: UpdateCommentInput!): Comments!
   removeComment(postId: Float!, id: Float!): Boolean!
@@ -342,6 +372,8 @@ type Mutation {
   Return id nhóm vừa xoá
   """
   deleteGroup(id: Float!): Float!
+  swipeRight(targetUser: Float!): TinderMatch!
+  unmatch(id: Float!): Boolean!
   createTinderProfile(input: CreateTinderProfileDto!): TinderProfile!
   updateTinderProfile(input: UpdateTinderProfileDto!): TinderProfile!
 }
@@ -386,6 +418,12 @@ input CreatePostInput {
   groupId: Float
   department: String
   isPinned: Boolean = false
+  options: [CreatePostOptionDto!]
+}
+
+input CreatePostOptionDto {
+  content: String!
+  voted: [Float!]
 }
 
 input UpdatePostInput {
@@ -394,6 +432,7 @@ input UpdatePostInput {
   groupId: Float
   department: String
   isPinned: Boolean = false
+  options: [CreatePostOptionDto!]
   id: Float!
 }
 

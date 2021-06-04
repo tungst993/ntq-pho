@@ -29,14 +29,14 @@ const TinderAppScreen = () => {
     );
   }
 
-  if (!profile) {
+  if (profile) {
+    return <TinderAppNavigator />;
+  } else {
     return (
       <View style={styles.container}>
         <NewUserProcess />
       </View>
     );
-  } else {
-    return <TinderAppNavigator />;
   }
 };
 

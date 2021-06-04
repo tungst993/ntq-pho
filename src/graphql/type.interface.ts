@@ -119,7 +119,7 @@ export type Post = Node & {
   __typename?: 'Post';
   id: Scalars['Float'];
   creatorId: Scalars['Float'];
-  medias?: Maybe<Array<Scalars['Float']>>;
+  medias: Array<Scalars['Float']>;
   caption?: Maybe<Scalars['String']>;
   groupId?: Maybe<Scalars['Float']>;
   department?: Maybe<UserDepartmentEnum>;
@@ -131,6 +131,8 @@ export type Post = Node & {
   totalLike: Scalars['Float'];
   isLike: Scalars['Boolean'];
   creatorInfo?: Maybe<User>;
+  options: Array<PostOption>;
+  mediasData: Array<Media>;
 };
 
 export type PostConnection = {
@@ -310,6 +312,12 @@ export enum TinderGenderEnum {
   ALL = 'ALL',
 }
 
+export type TinderProfileConnection = {
+  __typename?: 'TinderProfileConnection';
+  items?: Maybe<Array<TinderProfile>>;
+  meta: BasePaginationMeta;
+};
+
 export type TinderMatch = Node & {
   __typename?: 'TinderMatch';
   id: Scalars['Float'];
@@ -317,14 +325,34 @@ export type TinderMatch = Node & {
   targetUser: Scalars['Float'];
   status: TinderMatchStatus;
   isSuper: Scalars['Boolean'];
+  isNew: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
+  targetUserInfo: TinderProfile;
+  initiatorUserInfo: TinderProfile;
 };
 
 export enum TinderMatchStatus {
   REQUEST = 'REQUEST',
   MATCHED = 'MATCHED',
 }
+
+export type TinderMatchConnection = {
+  __typename?: 'TinderMatchConnection';
+  items?: Maybe<Array<TinderMatch>>;
+  meta: BasePaginationMeta;
+};
+
+export type PostOption = Node & {
+  __typename?: 'PostOption';
+  id: Scalars['Float'];
+  postId: Scalars['Float'];
+  content: Scalars['String'];
+  voted: Array<Scalars['Float']>;
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  voterInfo: Array<User>;
+};
 
 export type Query = {
   __typename?: 'Query';
@@ -346,7 +374,9 @@ export type Query = {
   getMessage: MessageConnection;
   myGroup: GroupConnection;
   searchGroup: GroupConnection;
+  myTinderMatches: TinderMatchConnection;
   myTinderProfile: TinderProfile;
+  getProfiles: TinderProfileConnection;
 };
 
 export type QueryGetUserInfoArgs = {
@@ -425,6 +455,16 @@ export type QuerySearchGroupArgs = {
   search?: Maybe<Scalars['String']>;
 };
 
+export type QueryMyTinderMatchesArgs = {
+  page: Scalars['Float'];
+  limit: Scalars['Float'];
+};
+
+export type QueryGetProfilesArgs = {
+  page: Scalars['Float'];
+  limit: Scalars['Float'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   updateUserInfo: User;
@@ -437,6 +477,9 @@ export type Mutation = {
   loginWithSNS: AuthConnection;
   logout: Scalars['Boolean'];
   setSeenNotification: Scalars['Boolean'];
+  addOptionToPost: PostOption;
+  voteOption: PostOption;
+  deleteOption: Scalars['Boolean'];
   createComment: Comments;
   updateComment: Comments;
   removeComment: Scalars['Boolean'];
@@ -452,6 +495,8 @@ export type Mutation = {
   updateGroup: Group;
   /** Return id nhóm vừa xoá */
   deleteGroup: Scalars['Float'];
+  swipeRight: TinderMatch;
+  unmatch: Scalars['Boolean'];
   createTinderProfile: TinderProfile;
   updateTinderProfile: TinderProfile;
 };
@@ -486,6 +531,21 @@ export type MutationCreateDirArgs = {
 
 export type MutationLoginWithSnsArgs = {
   input: LoginSnsInput;
+};
+
+export type MutationAddOptionToPostArgs = {
+  content: Scalars['String'];
+  postId: Scalars['Float'];
+};
+
+export type MutationVoteOptionArgs = {
+  id: Scalars['Float'];
+  postId: Scalars['Float'];
+};
+
+export type MutationDeleteOptionArgs = {
+  id: Scalars['Float'];
+  postId: Scalars['Float'];
 };
 
 export type MutationCreateCommentArgs = {
@@ -545,6 +605,14 @@ export type MutationDeleteGroupArgs = {
   id: Scalars['Float'];
 };
 
+export type MutationSwipeRightArgs = {
+  targetUser: Scalars['Float'];
+};
+
+export type MutationUnmatchArgs = {
+  id: Scalars['Float'];
+};
+
 export type MutationCreateTinderProfileArgs = {
   input: CreateTinderProfileDto;
 };
@@ -588,6 +656,12 @@ export type CreatePostInput = {
   groupId?: Maybe<Scalars['Float']>;
   department?: Maybe<Scalars['String']>;
   isPinned?: Maybe<Scalars['Boolean']>;
+  options?: Maybe<Array<CreatePostOptionDto>>;
+};
+
+export type CreatePostOptionDto = {
+  content: Scalars['String'];
+  voted?: Maybe<Array<Scalars['Float']>>;
 };
 
 export type UpdatePostInput = {
@@ -596,6 +670,7 @@ export type UpdatePostInput = {
   groupId?: Maybe<Scalars['Float']>;
   department?: Maybe<Scalars['String']>;
   isPinned?: Maybe<Scalars['Boolean']>;
+  options?: Maybe<Array<CreatePostOptionDto>>;
   id: Scalars['Float'];
 };
 
