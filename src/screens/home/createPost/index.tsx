@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
+// import { useNavigation } from '@react-navigation/native';
 import { Text, StyleSheet, View, FlatList, TextInput, TouchableOpacity } from 'react-native';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import { Modalize } from 'react-native-modalize';
@@ -22,14 +22,16 @@ import ListImageDisplay from '../../../components/shared/ListImageDisplay';
 import { VideoComponent } from '../../../components/VideoComponent';
 import AddVote from './AddVote';
 import FilterRow from '../../../components/FilterRow';
-import Button from '../../../components/shared/controls/Button';
+// import Button from '../../../components/shared/controls/Button';
 import FilteringMedia from '../../../components/FilteringMedia';
 import { FilterType } from '../../../components/FilterRow/type';
+import { useCreatePostMutation } from '../../../graphql/mutations/createPost.generated';
+import { Controller, useForm } from 'react-hook-form';
+// import { useFileUpload } from '../../../hooks/useFileUpload';
 
 const { FontWeights, FontSizes } = Typography;
 
 const CreatePost = React.memo(() => {
-  const { goBack } = useNavigation();
   const theme = useRecoilValue(themeState);
   const styles = style(theme);
   const [listImage, setListImage] = useState<Array<string>>([]);
@@ -38,8 +40,21 @@ const CreatePost = React.memo(() => {
   const [selectedFilter, setSelectedFilter] = useState<FilterType>(FilterType.NONE);
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [filterUri, setFilterUri] = useState<string>();
+  // const [upload] = useFileUpload();
 
   const modalizeRef = useRef<Modalize>(null);
+
+  const form = useForm();
+  const { control, handleSubmit } = form;
+
+  const [createPostMutation] = useCreatePostMutation({
+    onCompleted: (data) => {
+      console.log(data);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
 
   const onOpen = () => {
     modalizeRef.current?.open();
@@ -47,7 +62,16 @@ const CreatePost = React.memo(() => {
 
   const chooseImage = async (type: 'photo' | 'video' | 'any' | undefined) => {
     const file = await getImageFromLibrary(700, 700, false, type);
+
     if (file) {
+      // const fileUploaded = await upload({
+      //   uri: file.path,
+      //   type: file.mime,
+      //   name: file.filename ?? 'name',
+      //   height: file.height ?? 0,
+      //   width: file.width ?? 0,
+      // });
+
       if (type === 'photo') {
         setListImage([...listImage, file.path]);
       }
@@ -59,7 +83,11 @@ const CreatePost = React.memo(() => {
   };
 
   const removeImage = (uri: string) => {
+    if (listImage.length === 1) {
+      modalizeRef.current?.close();
+    }
     setListImage([...listImage.filter((item) => item !== uri)]);
+    setSelectedImage(null);
   };
 
   const removeAllImage = () => {
@@ -93,6 +121,21 @@ const CreatePost = React.memo(() => {
     }
   };
 
+  const onCLosedModal = () => {
+    setSelectedImage(null);
+  };
+
+  const createPost = (value: any) => {
+    createPostMutation({
+      variables: {
+        input: {
+          caption: value.caption,
+          options: value.vote,
+        },
+      },
+    });
+  };
+
   return (
     <>
       <View style={styles.container}>
@@ -101,23 +144,35 @@ const CreatePost = React.memo(() => {
             title="Tạo bài viết"
             iconSize={IconSizes.x5}
             IconRight={() => (
-              <TouchableOpacity onPress={goBack}>
+              <TouchableOpacity onPress={handleSubmit(createPost)}>
                 <Text style={{ ...styles.text, fontWeight: 'bold' }}>Đăng</Text>
               </TouchableOpacity>
             )}
           />
         </View>
-        <View style={{ ...mainStyles.viewWrapper, marginTop: 10 }}>
-          <TextInput
-            multiline
-            numberOfLines={10}
-            style={{ ...styles.input }}
-            placeholder="Bạn đang nghĩ gì?"
-            placeholderTextColor={theme.text02}
-          />
-        </View>
 
-        {voteVisible && <AddVote setVoteVisible={setVoteVisible} />}
+        <Controller
+          control={control}
+          name={'caption'}
+          render={({ onChange, onBlur, value }) => {
+            return (
+              <View style={{ ...mainStyles.viewWrapper, marginTop: 10 }}>
+                <TextInput
+                  value={value}
+                  multiline
+                  numberOfLines={10}
+                  style={{ ...styles.input }}
+                  placeholder="Bạn đang nghĩ gì?"
+                  placeholderTextColor={theme.text02}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                />
+              </View>
+            );
+          }}
+        />
+
+        {voteVisible && <AddVote setVoteVisible={setVoteVisible} form={form} />}
 
         <LinearGradient
           start={{ x: 0, y: 0 }}
@@ -216,14 +271,41 @@ const CreatePost = React.memo(() => {
           </TouchableOpacity>
         </View>
       </View>
-      <View>
-        <Modalize ref={modalizeRef} adjustToContentHeight={false} modalStyle={styles.viewAllImage}>
-          <FlatList
-            data={listImage}
-            style={{ paddingTop: 24 }}
-            renderItem={({ item, index }) => (
-              <View style={{ marginBottom: 20 }}>
-                {selectedImage !== null && selectedImage === index ? (
+      <Modalize
+        snapPoint={600}
+        ref={modalizeRef}
+        adjustToContentHeight={false}
+        modalStyle={styles.viewAllImage}
+        onClosed={onCLosedModal}>
+        <FlatList
+          data={listImage}
+          style={{ paddingTop: 24 }}
+          renderItem={({ item, index }) => (
+            <View style={{ marginBottom: 20 }}>
+              {selectedImage !== null && selectedImage === index ? (
+                <>
+                  <View style={styles.removeImage}>
+                    <TouchableOpacity style={{ width: 40, height: 40 }} onPress={() => removeImage(item)}>
+                      <LinearGradient
+                        start={{ x: 1, y: 1 }}
+                        end={{ x: 1, y: 1 }}
+                        colors={[MaterialColors.grey[100], MaterialColors.grey[600]]}
+                        style={styles.iconWrapper}>
+                        <Ionicons color={ThemeStatic.black} name="close" size={IconSizes.x4} />
+                      </LinearGradient>
+                    </TouchableOpacity>
+                  </View>
+                  <TouchableOpacity onPress={() => onSelectedImage(index)}>
+                    <FilteringMedia
+                      style={{ height: 290, borderRadius: 12 }}
+                      filter={selectedFilter}
+                      handleExtractMedia={handleExtractMedia}
+                      uri={item}
+                    />
+                  </TouchableOpacity>
+                </>
+              ) : (
+                selectedImage === null && (
                   <>
                     <View style={styles.removeImage}>
                       <TouchableOpacity style={{ width: 40, height: 40 }} onPress={() => removeImage(item)}>
@@ -237,52 +319,28 @@ const CreatePost = React.memo(() => {
                       </TouchableOpacity>
                     </View>
                     <TouchableOpacity onPress={() => onSelectedImage(index)}>
-                      <FilteringMedia
-                        style={{ height: 290, borderRadius: 12 }}
-                        filter={selectedFilter}
-                        handleExtractMedia={handleExtractMedia}
-                        uri={item}
-                      />
+                      <NativeImage style={{ height: 290, borderRadius: 12 }} uri={item} />
                     </TouchableOpacity>
                   </>
-                ) : (
-                  selectedImage === null && (
-                    <>
-                      <View style={styles.removeImage}>
-                        <TouchableOpacity style={{ width: 40, height: 40 }} onPress={() => removeImage(item)}>
-                          <LinearGradient
-                            start={{ x: 1, y: 1 }}
-                            end={{ x: 1, y: 1 }}
-                            colors={[MaterialColors.grey[100], MaterialColors.grey[600]]}
-                            style={styles.iconWrapper}>
-                            <Ionicons color={ThemeStatic.black} name="close" size={IconSizes.x4} />
-                          </LinearGradient>
-                        </TouchableOpacity>
-                      </View>
-                      <TouchableOpacity onPress={() => onSelectedImage(index)}>
-                        <NativeImage style={{ height: 290, borderRadius: 12 }} uri={item} />
-                      </TouchableOpacity>
-                    </>
-                  )
-                )}
-              </View>
-            )}
-          />
-          {selectedImage !== null && listImage.length > 0 && (
-            <View>
-              <FilterRow uri={listImage[selectedImage]} onChoseFilter={setSelectedFilter} style={{ width: '100%' }} />
-              <View style={mainStyles.spaceBetween}>
-                <TouchableOpacity style={styles.btn} onPress={onUpdateImage}>
-                  <Text style={{ color: theme.text02 }}>Thay đổi</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btn} onPress={() => setSelectedImage(null)}>
-                  <Text style={{ color: theme.text02 }}>Bỏ qua</Text>
-                </TouchableOpacity>
-              </View>
+                )
+              )}
             </View>
           )}
-        </Modalize>
-      </View>
+        />
+        {selectedImage !== null && listImage.length > 0 && (
+          <View>
+            <FilterRow uri={listImage[selectedImage]} onChoseFilter={setSelectedFilter} style={{ width: '100%' }} />
+            <View style={mainStyles.spaceBetween}>
+              <TouchableOpacity style={styles.btn} onPress={onUpdateImage}>
+                <Text style={{ color: theme.text02 }}>Thay đổi</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btn} onPress={() => setSelectedImage(null)}>
+                <Text style={{ color: theme.text02 }}>Bỏ qua</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+      </Modalize>
     </>
   );
 });

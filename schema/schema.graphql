@@ -103,7 +103,7 @@ type AuthConnection {
 type Post implements Node {
   id: Float!
   creatorId: Float!
-  medias: [Float!]
+  medias: [Float!]!
   caption: String
   groupId: Float
   department: UserDepartmentEnum
@@ -115,6 +115,8 @@ type Post implements Node {
   totalLike: Float!
   isLike: Boolean!
   creatorInfo: User
+  options: [PostOption!]!
+  mediasData: [Media!]!
 }
 
 type PostConnection {
@@ -282,6 +284,7 @@ type TinderMatch implements Node {
   targetUser: Float!
   status: TinderMatchStatus!
   isSuper: Boolean!
+  isNew: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -289,6 +292,16 @@ type TinderMatch implements Node {
 enum TinderMatchStatus {
   REQUEST
   MATCHED
+}
+
+type PostOption implements Node {
+  id: Float!
+  postId: Float!
+  content: String!
+  voted: [Float!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  voterInfo: [User!]!
 }
 
 type Query {
@@ -324,6 +337,9 @@ type Mutation {
   loginWithSNS(input: LoginSNSInput!): AuthConnection!
   logout: Boolean!
   setSeenNotification: Boolean!
+  addOptionToPost(content: String!, postId: Float!): PostOption!
+  voteOption(id: Float!, postId: Float!): PostOption!
+  deleteOption(id: Float!, postId: Float!): Boolean!
   createComment(input: CreateCommentInput!): Comments!
   updateComment(input: UpdateCommentInput!): Comments!
   removeComment(postId: Float!, id: Float!): Boolean!
@@ -386,6 +402,12 @@ input CreatePostInput {
   groupId: Float
   department: String
   isPinned: Boolean = false
+  options: [CreatePostOptionDto!]
+}
+
+input CreatePostOptionDto {
+  content: String!
+  voted: [Float!]
 }
 
 input UpdatePostInput {
@@ -394,6 +416,7 @@ input UpdatePostInput {
   groupId: Float
   department: String
   isPinned: Boolean = false
+  options: [CreatePostOptionDto!]
   id: Float!
 }
 

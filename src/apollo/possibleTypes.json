@@ -12,7 +12,8 @@
       "Group",
       "GroupMember",
       "TinderProfile",
-      "TinderMatch"
+      "TinderMatch",
+      "PostOption"
     ]
   }
 }
