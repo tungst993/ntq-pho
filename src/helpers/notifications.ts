@@ -77,10 +77,10 @@ export const noPermissionNotification = () =>
 
 export const longPressDeleteNotification = (onLongPress: any) =>
   showMessage({
-    message: 'Long press this notification to delete',
+    message: 'Ấn giữ để xoá',
     icon: 'danger',
     type: 'danger',
-    duration: 4000,
+    duration: 3000,
     backgroundColor: ThemeStatic.delete,
     onLongPress,
   });
