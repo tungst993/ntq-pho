@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useRef, useState } from 'react';
-import { Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableOpacity, View, FlatList, Image, Platform, PermissionsAndroid, Pressable } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableOpacity, View, FlatList, Image, Platform, PermissionsAndroid, Pressable, TextInput } from 'react-native';
 import { ifIphoneX } from 'react-native-iphone-x-helper';
 import { useRecoilValue } from 'recoil';
 import { themeState } from '../../../recoil/theme/atoms';
@@ -27,6 +27,7 @@ import CameraRoll, { PhotoIdentifier } from '@react-native-community/cameraroll'
 import { ThemeStatic } from '../../../theme';
 import UserCard from '../../../components/UserCard';
 import { PostOption } from '../../../components/PostOption';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 export const DetailPost = () => {
   const theme = useRecoilValue(themeState);
   const style = styles(theme);
@@ -45,6 +46,8 @@ export const DetailPost = () => {
   const [page, setPage] = useState(1);
   const [medias, setMedias] = useState<PhotoIdentifier[]>([]);
   const isFocused = useIsFocused();
+  const [dataOption, setDataOption] = useState([1, 2, 3, 4]);
+  const [showInputComment, setShowInputComment] = useState(true);
 
   const data = [
     'https://uploads-ssl.webflow.com/5f5f2b58b1af780151375838/606916bf1e21c70142eb887a_GaiHot2k__anh-gai-xinh-de-thuong-viet-nam%252B%2525282%252529.jpeg',
@@ -267,6 +270,7 @@ export const DetailPost = () => {
             <Comment onReply={() => setIsReply(true)} infoUser={(value) => setInfoUserReply(value)} />
           );
         }}
+
         keyExtractor={index => index.toString()}
         contentContainerStyle={[style.paddingHorizontal20, { marginBottom: 10 }]}
       />
@@ -312,10 +316,23 @@ export const DetailPost = () => {
     return (
       <View style={style.viewOptionVote}>
         <FlatList
-          data={[1, 2, 3]}
+          data={dataOption}
           renderItem={({ item }) => <PostOption />}
           keyExtractor={index => index.toString()}
           contentContainerStyle={style.paddingHorizontal20}
+          ListFooterComponent={
+            <View style={style.row}>
+              <Ionicons onPress={() => setDataOption([...dataOption, 5])} name={'ios-add'} size={IconSizes.x5} color={theme.text02} style={{ marginTop: 10, marginRight: 10 }} />
+              <View style={style.addOption}>
+                <TextInput
+                  onFocus={() => setShowInputComment(false)}
+                  onBlur={() => setShowInputComment(true)}
+                  style={{ color: theme.text01 }}
+                  placeholderTextColor={theme.text02}
+                  placeholder={'Thêm lựa chọn thăm dò ý kiến...'} />
+              </View>
+            </View>
+          }
         />
       </View>
     );
@@ -369,7 +386,7 @@ export const DetailPost = () => {
           <Image source={{ uri: medias[selectedIndex].node.image.uri }} style={{ height: 70, width: 70, borderRadius: 5, }} />
           <FontAwesome onPress={() => setSelectedIndex(-1)} name={'close'} size={IconSizes.x5} style={style.iconDelete} color={theme.text01} />
         </View> : null}
-        <View style={[style.row, { paddingBottom: 10 }]}>
+        {showInputComment && <View style={[style.row, { paddingBottom: 10 }]}>
           <TouchableOpacity disabled={selectedIndex === -1 ? false : true} onPress={() => {
             setOpenMedia(true);
             // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -380,7 +397,7 @@ export const DetailPost = () => {
           </TouchableOpacity>
           <AnimatedSearchBar placeholder={'Viết bình luận ...'} value={comment} open={isReply} onChangeText={setComment} />
         </View>
-
+        }
       </View>
       <ImageView onClose={() => setVisible(false)} images={listImageFull} imageIndex={indexImage} isVisible={visible} />
 
@@ -626,5 +643,14 @@ const styles = (theme = {} as ThemeColors) =>
     },
     viewOptionVote: {
       flex: 1
+    },
+    addOption: {
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: theme.text02,
+      borderRadius: 4,
+      padding: 5,
+      flex: 1,
+      marginTop: 12,
+      marginRight: 30,
     }
   });
