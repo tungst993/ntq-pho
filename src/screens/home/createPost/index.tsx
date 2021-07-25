@@ -64,14 +64,6 @@ const CreatePost = React.memo(() => {
     const file = await getImageFromLibrary(700, 700, false, type);
 
     if (file) {
-      // const fileUploaded = await upload({
-      //   uri: file.path,
-      //   type: file.mime,
-      //   name: file.filename ?? 'name',
-      //   height: file.height ?? 0,
-      //   width: file.width ?? 0,
-      // });
-
       if (type === 'photo') {
         setListImage([...listImage, file.path]);
       }

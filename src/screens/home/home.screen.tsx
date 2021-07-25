@@ -49,15 +49,18 @@ const styles = (theme = {} as ThemeColors) =>
       justifyContent: 'space-between',
     },
     avatarImage: {
-      height: 40,
-      width: 40,
-      borderRadius: 40,
+      height: 50,
+      width: 50,
+      borderRadius: 50,
+      marginRight: 10,
     },
     viewWrapper: {
       paddingHorizontal: 20,
       backgroundColor: theme.base,
       marginBottom: 10,
       paddingBottom: 10,
+      alignItems: 'center',
+      paddingVertical: 5,
     },
     input: {
       height: 40,
