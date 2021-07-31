@@ -41,18 +41,13 @@ export const PostComponent = React.memo<PostProps>(({ dataImage = data }) => {
   const [showMore, setShowmore] = useState(false);
   const navigation = useNavigation();
 
-  const {data} = useMyPostQuery({
-    onCompleted: (data) => {
-      console.log('data', data);
-    },
-    onError: (err) => {
-      console.log('err 12', err);
+  const {data} = useGetAllPostQuery({
+    variables: {
+      page: 1,
+      limit: 10
     },
     fetchPolicy: 'cache-and-network'
   });
-
-  console.log('data', data);
-
 
   useEffect(() => {
     const arr: Array<any> = [];
@@ -226,22 +221,26 @@ export const PostComponent = React.memo<PostProps>(({ dataImage = data }) => {
     navigation.navigate(AppRoutes.DETAIL_POST);
   };
   return (
-    <View style={style.container}>
+    <>
+    {data?.getAllPost?.items && data?.getAllPost?.items.map((item, index) => (
+      <View style={style.container}>
       <Pressable onPress={onComment} style={{ ...style.row, ...style.paddingHorizontal20 }}>
         <NativeImage
           resizeMode={'contain'}
           uri={
-            'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png'
+            item.creatorInfo?.avatar || ''
           }
           style={style.imageAvatar}
         />
         <View>
-          <Text style={style.textUserName}>Username</Text>
+          <Text style={style.textUserName}>{item.creatorInfo?.fullName}</Text>
           <Text style={style.textTime}>{moment().fromNow()}</Text>
         </View>
       </Pressable>
       <Pressable onPress={() => setShowmore(!showMore)}>
-        <Text numberOfLines={showMore ? undefined : 2} style={[style.textContent, style.paddingHorizontal20]}>Như một thói quen, cứ thứ 2 đầu tuần, các thành viên lại cùng nhau khoác lên mình chiếc áo đồng phục lan tỏa niềm tự hào và chất riêng của người NTQ. Ngày hôm nay, các bạn hãy mặc áo đồng phục của công ty (dù có đến công ty hay làm việc ở nhà) và đừng quên chụp ảnh lại để khoe với mọi người nha!!</Text>
+        <Text numberOfLines={showMore ? undefined : 2} style={[style.textContent, style.paddingHorizontal20]}>
+          {item.caption}
+          </Text>
       </Pressable>
       {/* {ImageArea()} */}
       <VideoComponent uri={'https://assets.mixkit.co/videos/download/mixkit-countryside-meadow-4075.mp4'} />
@@ -296,6 +295,9 @@ export const PostComponent = React.memo<PostProps>(({ dataImage = data }) => {
       </View>
       <ImageView onClose={() => setVisible(false)} images={listImageFull} imageIndex={indexImage} isVisible={visible} />
     </View>
+    ))}
+    </>
+
   );
 });
 
@@ -305,6 +307,7 @@ const styles = (theme = {} as ThemeColors) =>
       flex: 1,
       backgroundColor: theme.base,
       paddingVertical: 16,
+      marginBottom: 12,
     },
     paddingHorizontal20: {
       paddingHorizontal: 20,
