@@ -329,6 +329,7 @@ type Query {
   getPostDetail(id: Float!): Post!
   myPost(page: Float!, limit: Float!): PostConnection!
   getUserPost(page: Float!, limit: Float!, userId: Float!): PostConnection!
+  getAllPost(page: Float!, limit: Float!): PostConnection!
   getChats(page: Float!, limit: Float!): ChatConnection!
   getExistChat(participants: [Float!]!): Chat
   getChatHasUnseenMessage: [Float!]!

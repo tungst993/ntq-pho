@@ -368,6 +368,7 @@ export type Query = {
   getPostDetail: Post;
   myPost: PostConnection;
   getUserPost: PostConnection;
+  getAllPost: PostConnection;
   getChats: ChatConnection;
   getExistChat?: Maybe<Chat>;
   getChatHasUnseenMessage: Array<Scalars['Float']>;
@@ -427,6 +428,11 @@ export type QueryGetUserPostArgs = {
   page: Scalars['Float'];
   limit: Scalars['Float'];
   userId: Scalars['Float'];
+};
+
+export type QueryGetAllPostArgs = {
+  page: Scalars['Float'];
+  limit: Scalars['Float'];
 };
 
 export type QueryGetChatsArgs = {

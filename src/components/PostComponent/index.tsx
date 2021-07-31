@@ -17,6 +17,9 @@ import { VideoComponent } from '../VideoComponent';
 import { useNavigation } from '@react-navigation/core';
 import { AppRoutes } from '../../navigator/app-routes';
 import { numberReaction } from '../../utils/constants';
+import { useGetAllPostLazyQuery, useGetAllPostQuery } from '../../graphql/queries/getAllPost.generated';
+import type { onError } from '@apollo/client/link/error';
+import { useMyPostQuery } from '../../graphql/queries/myPost.generated';
 
 interface PostProps {
   dataImage?: Array<string>;
@@ -37,6 +40,19 @@ export const PostComponent = React.memo<PostProps>(({ dataImage = data }) => {
   const [indexImage, setIndexImage] = useState(0);
   const [showMore, setShowmore] = useState(false);
   const navigation = useNavigation();
+
+  const {data} = useMyPostQuery({
+    onCompleted: (data) => {
+      console.log('data', data);
+    },
+    onError: (err) => {
+      console.log('err 12', err);
+    },
+    fetchPolicy: 'cache-and-network'
+  });
+
+  console.log('data', data);
+
 
   useEffect(() => {
     const arr: Array<any> = [];

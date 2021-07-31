@@ -1,0 +1,77 @@
+query myPost($page: Float!, $limit: Float!) {
+  myPost(page: $page, limit: $limit) {
+    items {
+      id
+      creatorId
+      medias
+      caption
+      groupId
+      department
+      isPinned
+      actualLike
+      score
+      createdAt
+      updatedAt
+      totalLike
+      isLike
+      creatorInfo {
+        id
+        firstName
+        lastName
+        fullName
+        nickname
+        intro
+        googleId
+        avatar
+        isNew
+        lastSeen
+        department
+        position
+        createdAt
+        updatedAt
+      }
+      options {
+        id
+        postId
+        content
+        voted
+        createdAt
+        updatedAt
+        voterInfo {
+          id
+          firstName
+          lastName
+          fullName
+          nickname
+          intro
+          googleId
+          avatar
+          isNew
+          lastSeen
+          department
+          position
+          createdAt
+          updatedAt
+        }
+      }
+      mediasData {
+        id
+        fileSize
+        name
+        filePath
+        mimeType
+        isDeleted
+        type
+        createdAt
+        updatedAt
+      }
+    }
+    meta {
+      itemCount
+      totalItems
+      itemsPerPage
+      totalPages
+      currentPage
+    }
+  }
+}
